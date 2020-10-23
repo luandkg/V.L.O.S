@@ -1,11 +1,11 @@
 package Hardware;
 
-public class HD {
+public class SATA extends Dispositivo  {
 
     private String mModelo;
     private long mTamanho;
 
-    public HD(String eModelo,long eTamanho){
+    public SATA(String eModelo, long eTamanho){
 
         mModelo=eModelo;
         mTamanho=eTamanho;
@@ -15,5 +15,9 @@ public class HD {
     public String getModelo(){return mModelo;}
     public long getTamanho(){return mTamanho;}
 
+    @Override
+    public String getTipo() {
+        return "SATA";
+    }
 
 }

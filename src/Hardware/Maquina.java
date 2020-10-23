@@ -1,16 +1,16 @@
 package Hardware;
 
+import java.util.ArrayList;
+
 public class Maquina {
 
     private Processador mProcessador;
-    private Memoria mMemoria;
-    private HD mHD;
+    private ArrayList<Dispositivo> mDispositivos;
 
-    public Maquina() {
+    public Maquina(Processador eProcessador) {
 
-        mProcessador = new Processador("X86");
-        mMemoria = new Memoria("HX434C16FB3AK4", 10 * 1024 * 1024 );
-        mHD = new HD("ST2000DM008", 500 * 1024 * 1024 );
+        mProcessador = eProcessador;
+        mDispositivos = new ArrayList<Dispositivo>();
 
     }
 
@@ -18,12 +18,12 @@ public class Maquina {
         return mProcessador;
     }
 
-    public Memoria getMemoria() {
-        return mMemoria;
+    public ArrayList<Dispositivo> getDispositivos() {
+        return mDispositivos;
     }
 
-    public HD getHD() {
-        return mHD;
+    public void adicionarDispositivo(Dispositivo eDispositivo){
+        mDispositivos.add(eDispositivo);
     }
 
 }
