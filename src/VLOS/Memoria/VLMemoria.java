@@ -1,4 +1,4 @@
-package VLOS;
+package VLOS.Memoria;
 
 import Hardware.Memoria;
 

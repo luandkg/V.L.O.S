@@ -1,6 +1,7 @@
 package VLOS;
 
 import Hardware.*;
+import VLOS.Memoria.VLMemoria;
 
 public class VLOS {
 
@@ -8,7 +9,7 @@ public class VLOS {
 
     private final long MEMORIA_BLOCO = 1024 * 1024;
 
-    private  VLMemoria mVLMemoria;
+    private VLMemoria mVLMemoria;
 
     public VLOS(Maquina eMaquina) {
         mMaquina = eMaquina;
@@ -18,8 +19,9 @@ public class VLOS {
 
         Utils mUtils = new Utils();
 
-        System.out.println("\t DETECCAO DE HARDWARE");
+        System.out.println("\t-----------------------------------------------------");
 
+        System.out.println("\t DETECCAO DE HARDWARE");
         System.out.println("\t\t Processador : " + mMaquina.getProcessador().getProcessador() + " -> " + mUtils.texto_nucleo(mMaquina.getProcessador().getNucleos()));
 
 
@@ -29,7 +31,7 @@ public class VLOS {
         boolean mTemHD = false;
 
 
-         mVLMemoria = null;
+        mVLMemoria = null;
 
         for (Dispositivo mDispositivo : mMaquina.getDispositivos()) {
 
@@ -68,62 +70,68 @@ public class VLOS {
         }
 
 
+        System.out.println("\t-----------------------------------------------------");
+
+
         if (mTemMemoria) {
             if (mTemHD) {
                 sistemaOK = true;
             }
         }
 
+        if (!sistemaOK) {
 
-        if (sistemaOK) {
-
-            System.out.println("");
-            System.out.println("\t\t                         VLOS                        ");
-
-
-            dump_memoria();
-
-            System.out.println("\t\t -->> Reservando 64 Blocos para KERNEL");
-            mVLMemoria.reservarKernel(64 * MEMORIA_BLOCO);
-
-            dump_memoria();
-
-
-        } else {
 
             System.out.println("");
 
             if (!mTemMemoria) {
-                System.out.println("\t\t VLOS : Nao pode iniciar -->> NAO TEM MEMORIA !");
+                System.out.println("\t VLOS : Nao pode iniciar -->> NAO TEM MEMORIA !");
             }
 
             if (!mTemHD) {
-                System.out.println("\t\t VLOS : Nao pode iniciar -->> NAO TEM HD !");
+                System.out.println("\t VLOS : Nao pode iniciar -->> NAO TEM HD !");
             }
+
+        }
+
+
+
+        if (sistemaOK) {
+
+            System.out.println("");
+            System.out.println("\t                         VLOS                        ");
+
+
+            dump_memoria();
+
+            System.out.println("\t -->> Reservando 64 Blocos para KERNEL");
+            mVLMemoria.reservarKernel(64 * MEMORIA_BLOCO);
+
+            dump_memoria();
+
 
         }
 
     }
 
 
-    public void dump_memoria(){
+    public void dump_memoria() {
 
-        System.out.println("\t\t-----------------------------------------------------");
-        System.out.println("\t\tMEMORIA");
-        System.out.println("\t\t\t - Disponivel : " + mVLMemoria.getTamanho());
-        System.out.println("\t\t\t - Bloco Tamanho : " + mVLMemoria.getTamanhoBloco() + " bytes :: " + (mVLMemoria.getTamanhoBloco() / 1024) + " kb");
-        System.out.println("\t\t\t - Blocos : " + mVLMemoria.getBlocos());
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\tMEMORIA");
+        System.out.println("\t\t - Disponivel : " + mVLMemoria.getTamanho());
+        System.out.println("\t\t - Bloco Tamanho : " + mVLMemoria.getTamanhoBloco() + " bytes :: " + (mVLMemoria.getTamanhoBloco() / 1024) + " kb");
+        System.out.println("\t\t - Blocos : " + mVLMemoria.getBlocos());
 
-        System.out.println("\t\t\t - KERNEL Reservado : " + mVLMemoria.getBlocos_KernelReservados());
-        System.out.println("\t\t\t\t  Livre : " + mVLMemoria.getBlocos_KernelReservados_Livre());
-        System.out.println("\t\t\t\t  Ocupado : " + mVLMemoria.getBlocos_KernelReservados_Ocupado());
+        System.out.println("\t\t - KERNEL Reservado : " + mVLMemoria.getBlocos_KernelReservados());
+        System.out.println("\t\t\t  Livre : " + mVLMemoria.getBlocos_KernelReservados_Livre());
+        System.out.println("\t\t\t  Ocupado : " + mVLMemoria.getBlocos_KernelReservados_Ocupado());
 
-        System.out.println("\t\t\t - Blocos de Usuario : " + mVLMemoria.getBlocos_Usuarios());
-        System.out.println("\t\t\t\t Livre : " + mVLMemoria.getBlocos_Usuarios_Livre());
-        System.out.println("\t\t\t\t Ocupado : " + mVLMemoria.getBlocos_Usuarios_Ocupado());
+        System.out.println("\t\t - Blocos de Usuario : " + mVLMemoria.getBlocos_Usuarios());
+        System.out.println("\t\t\t Livre : " + mVLMemoria.getBlocos_Usuarios_Livre());
+        System.out.println("\t\t\t Ocupado : " + mVLMemoria.getBlocos_Usuarios_Ocupado());
 
-        System.out.println("\t\t-----------------------------------------------------");
-
+        System.out.println("\t-----------------------------------------------------");
 
 
     }
