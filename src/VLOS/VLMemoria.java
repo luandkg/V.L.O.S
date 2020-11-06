@@ -64,7 +64,7 @@ public class VLMemoria {
             if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
                 eContagem += 1;
             } else if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
-              //  eContagem += 1;
+                //  eContagem += 1;
             }
         }
 
@@ -79,7 +79,7 @@ public class VLMemoria {
         for (int i = 0; i < mQuantidadeDeBlocos; i++) {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
-               // eContagem += 1;
+                // eContagem += 1;
             } else if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
                 eContagem += 1;
             }
@@ -96,7 +96,7 @@ public class VLMemoria {
         for (int i = 0; i < mQuantidadeDeBlocos; i++) {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.LIVRE) {
-                 eContagem += 1;
+                eContagem += 1;
             } else if (eBloco.getStatus() == BlocoStatus.OCUPADO) {
                 eContagem += 1;
             }
@@ -128,7 +128,7 @@ public class VLMemoria {
         for (int i = 0; i < mQuantidadeDeBlocos; i++) {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.LIVRE) {
-               // eContagem += 1;
+                // eContagem += 1;
             } else if (eBloco.getStatus() == BlocoStatus.OCUPADO) {
                 eContagem += 1;
             }
@@ -137,14 +137,15 @@ public class VLMemoria {
         return eContagem;
     }
 
-    public BlocoAlocado reservarKernel(long eTamanho) {
+    public void reservarKernel(long eTamanho) {
 
         ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
+
 
         if (eTamanho > 0) {
 
             int eReservar = 1;
-            eTamanho -=mTamanhoBloco;
+            eTamanho -= mTamanhoBloco;
 
             while (eTamanho >= mTamanhoBloco) {
                 eReservar += 1;
@@ -180,9 +181,107 @@ public class VLMemoria {
 
         }
 
-        BlocoAlocado mBlocoAlocado = new BlocoAlocado(eAlocando);
 
-        return mBlocoAlocado;
+    }
+
+    public Segmento alocarSegmentoDeKernel(long eTamanho) {
+
+        ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
+
+        long mTamanho = eTamanho;
+
+        if (eTamanho > 0) {
+
+            int eReservar = 1;
+            eTamanho -= mTamanhoBloco;
+
+            while (eTamanho >= mTamanhoBloco) {
+                eReservar += 1;
+                eTamanho -= mTamanhoBloco;
+            }
+
+
+            long eReservando = 0;
+
+            for (int i = 0; i < mQuantidadeDeBlocos; i++) {
+
+                Bloco eBloco = mBlocos.get(i);
+                if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
+
+                    eBloco.setStatus(BlocoStatus.OCUPADO_KERNEL);
+
+                    eAlocando.add(eBloco);
+                    eReservando += 1;
+                    if (eReservando >= eReservar) {
+                        break;
+                    }
+                }
+
+            }
+
+            // System.out.println("Reservando : " + eReservar + " -->> " + eReservando);
+
+            if (eReservar == eReservando) {
+
+            } else {
+                throw new IllegalArgumentException("Nao existem blocos disponiveis !");
+            }
+
+        }
+
+        return new Segmento(mTamanho, eAlocando);
+
+
+    }
+
+
+    public Segmento alocarSegmentoDeUsuario(long eTamanho) {
+
+        ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
+
+        long mTamanho = eTamanho;
+
+        if (eTamanho > 0) {
+
+            int eReservar = 1;
+            eTamanho -= mTamanhoBloco;
+
+            while (eTamanho >= mTamanhoBloco) {
+                eReservar += 1;
+                eTamanho -= mTamanhoBloco;
+            }
+
+
+            long eReservando = 0;
+
+            for (int i = 0; i < mQuantidadeDeBlocos; i++) {
+
+                Bloco eBloco = mBlocos.get(i);
+                if (eBloco.getStatus() == BlocoStatus.LIVRE) {
+
+                    eBloco.setStatus(BlocoStatus.OCUPADO);
+
+                    eAlocando.add(eBloco);
+                    eReservando += 1;
+                    if (eReservando >= eReservar) {
+                        break;
+                    }
+                }
+
+            }
+
+            // System.out.println("Reservando : " + eReservar + " -->> " + eReservando);
+
+            if (eReservar == eReservando) {
+
+            } else {
+                throw new IllegalArgumentException("Nao existem blocos disponiveis !");
+            }
+
+        }
+
+        return new Segmento(mTamanho, eAlocando);
+
 
     }
 
