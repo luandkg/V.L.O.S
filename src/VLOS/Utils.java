@@ -1,5 +1,7 @@
 package VLOS;
 
+import java.text.DecimalFormat;
+
 public class Utils {
 
 
@@ -7,7 +9,7 @@ public class Utils {
 
         if (e == 0) {
             return "Nenhum Nucleo";
-        } else if (e == 0) {
+        } else if (e == 1) {
             return "1 Nucleo";
         } else {
             return e + " Nucleos";
@@ -17,58 +19,35 @@ public class Utils {
 
     public String texto_tamanho(long eEspaco) {
 
-        long PARCELA = 1024;
+        String ePrefixos = "KMGT";
 
-        String eUnidade = "";
-        long eTamanho = 0;
+        int i = 0;
+        int o = ePrefixos.length();
 
-        if (eEspaco == 0) {
-            eUnidade = "byte";
-        } else {
-            eUnidade = "bytes";
+        float deEspaco = (float) eEspaco;
+
+
+        while ((deEspaco >= 1024) && (i < o)) {
+
+            deEspaco = deEspaco / 1024;
+
+            i += 1;
         }
 
-        if (eEspaco >= PARCELA) {
-
-            eUnidade = "KB";
-            eTamanho=0;
-
-            while (eEspaco >= PARCELA) {
-                eEspaco -= PARCELA;
-                eTamanho += 1;
-            }
-
-            if (eTamanho >= PARCELA) {
-
-                eUnidade = "MB";
-                eEspaco=eTamanho;
-                eTamanho=0;
-
-                while (eEspaco >= PARCELA) {
-                    eEspaco -= PARCELA;
-                    eTamanho += 1;
-                }
-            }
-
-
-            if (eTamanho >= PARCELA) {
-
-                eUnidade = "GB";
-                eEspaco=eTamanho;
-                eTamanho=0;
-
-                while (eEspaco >= PARCELA) {
-                    eEspaco -= PARCELA;
-                    eTamanho += 1;
-                }
-            }
-
+        if (i == 0) {
+            return deEspaco + " bytes";
         } else {
-            eTamanho = eEspaco;
+
+            DecimalFormat formatter = new DecimalFormat("#.00");
+            String sTamanho = "";
+
+            try {
+                sTamanho = formatter.format(deEspaco);
+            } catch (Exception ex) {
+            }
+
+            return (sTamanho + " " + ePrefixos.charAt(i - 1) + "b").replace(",", ".");
         }
-
-
-        return eTamanho + " " + eUnidade;
 
 
     }

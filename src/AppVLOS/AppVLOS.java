@@ -12,14 +12,14 @@ public class AppVLOS {
         System.out.println("UnB 2020.01 - ISO");
         System.out.println("");
         System.out.println("\t Aluno : Luan Freitas - 17/0003191");
-        System.out.println("\t Aluno : Vinicius Martins");
+        System.out.println("\t Aluno : Vinicius Martins - 17/0157962");
 
         System.out.println("");
 
 
         Maquina_i368 mMaquina = new Maquina_i368();
 
-        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", 10 * 1024 * 1024));
+        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 + 512) * 1024 * 1024));
 
         mMaquina.adicionarDispositivo(new SATA("ST2000DM008", 500 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("WD20PURX", 200 * 1024 * 1024));
