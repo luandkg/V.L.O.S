@@ -19,3 +19,14 @@
      - Alunos
         - Luan Freitas
         - Vinícius Martins
+        
+        
+     - IMPLEMENTAÇÕES
+        - Pseudo OS 
+        - Inicializador de Arquitura
+        - Inicializador de Perifericos
+        - Gerenciador de Processos
+        - Gerenciador de Memoria
+        - Despachador
+        - Gerenciador de Recursos
+     

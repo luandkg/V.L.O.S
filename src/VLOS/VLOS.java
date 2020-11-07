@@ -7,7 +7,8 @@ import VLOS.Memoria.Segmento;
 import VLOS.Memoria.VLMemoria;
 import VLOS.Processo.Processo;
 import VLOS.Processo.VLProcessos;
-import Utils.Texto;
+import VLOS.Recurso.Recurso;
+import VLOS.Recurso.VLRecursos;
 
 public class VLOS {
 
@@ -17,6 +18,8 @@ public class VLOS {
 
     private VLMemoria mVLMemoria;
     private VLProcessos mVLProcessos;
+    private VLRecursos mVLRecursos;
+
     private Despachante mDespachante;
 
     public VLOS(Maquina eMaquina) {
@@ -40,6 +43,7 @@ public class VLOS {
 
 
         mVLMemoria = null;
+        mVLRecursos = new VLRecursos();
 
         for (Dispositivo mDispositivo : mMaquina.getDispositivos()) {
 
@@ -63,15 +67,21 @@ public class VLOS {
                 Impressora mImpressora = (Impressora) mDispositivo;
                 System.out.println("\t\t Impressora : " + mImpressora.getModelo());
 
+                mVLRecursos.adicionarRecurso(mImpressora.getModelo());
+
             } else if (mDispositivo instanceof Scanner) {
 
                 Scanner mScanner = (Scanner) mDispositivo;
                 System.out.println("\t\t Scanner : " + mScanner.getModelo());
 
+                mVLRecursos.adicionarRecurso(mScanner.getModelo());
+
             } else if (mDispositivo instanceof Modem) {
 
                 Modem mModem = (Modem) mDispositivo;
                 System.out.println("\t\t Modem : " + mModem.getModelo());
+
+                mVLRecursos.adicionarRecurso(mModem.getModelo());
 
             }
 
@@ -137,6 +147,8 @@ public class VLOS {
 
                 mostrarProcesso(mProcessoCorrente.getPID());
 
+                dump_recursos();
+
             }
 
 
@@ -189,5 +201,20 @@ public class VLOS {
 
     }
 
+
+    public void dump_recursos() {
+
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t - RECURSOS ");
+
+        for (Recurso eRecurso : mVLRecursos.getRecursos()) {
+
+            System.out.println("\t\t - RECURSO : " + eRecurso.getRID() + " ->> " + eRecurso.getStatus());
+
+        }
+
+        System.out.println("\t-----------------------------------------------------");
+
+    }
 
 }
