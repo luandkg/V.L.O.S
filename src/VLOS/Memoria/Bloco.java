@@ -14,6 +14,9 @@ public class Bloco {
 
     }
 
+    public long getOffset() {
+        return mID ;
+    }
 
     public void setStatus(BlocoStatus eBlocoStatus) {
         mBlocoStatus = eBlocoStatus;

@@ -12,6 +12,9 @@ public class VLMemoria {
     private long mQuantidadeDeBlocos;
     private ArrayList<Bloco> mBlocos;
 
+    private long KERNEL_OFFSET;
+    private long USUARIO_OFFSET;
+
     public VLMemoria(Memoria eMemoria, long eTamanhoDoBloco) {
 
         mMemoria = eMemoria;
@@ -23,6 +26,9 @@ public class VLMemoria {
         for (int i = 0; i < mQuantidadeDeBlocos; i++) {
             mBlocos.add(new Bloco(this, i, BlocoStatus.LIVRE));
         }
+
+        KERNEL_OFFSET = 0;
+        USUARIO_OFFSET = 0;
 
     }
 
@@ -189,6 +195,7 @@ public class VLMemoria {
         ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
 
         long mTamanho = eTamanho;
+        long eOffset = KERNEL_OFFSET;
 
         if (eTamanho > 0) {
 
@@ -229,7 +236,7 @@ public class VLMemoria {
 
         }
 
-        return new Segmento(mTamanho, eAlocando);
+        return new Segmento(mTamanho, eOffset, eAlocando);
 
 
     }
@@ -240,6 +247,7 @@ public class VLMemoria {
         ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
 
         long mTamanho = eTamanho;
+        long eOffset = USUARIO_OFFSET;
 
         if (eTamanho > 0) {
 
@@ -266,6 +274,8 @@ public class VLMemoria {
                     if (eReservando >= eReservar) {
                         break;
                     }
+                } else if (eBloco.getStatus() == BlocoStatus.OCUPADO) {
+                    eOffset+=1;
                 }
 
             }
@@ -280,10 +290,14 @@ public class VLMemoria {
 
         }
 
-        return new Segmento(mTamanho, eAlocando);
+        return new Segmento(mTamanho, eOffset, eAlocando);
 
 
     }
 
+    public void definirOffsets(int eKernel,int eUsuario){
+        KERNEL_OFFSET=eKernel;
+        USUARIO_OFFSET=eUsuario;
+    }
 
 }

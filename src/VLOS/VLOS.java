@@ -1,7 +1,13 @@
 package VLOS;
 
 import Hardware.*;
+import VLOS.Despachante.Despachante;
+import VLOS.Despachante.ItemDespachante;
+import VLOS.Memoria.Segmento;
 import VLOS.Memoria.VLMemoria;
+import VLOS.Processo.Processo;
+import VLOS.Processo.VLProcessos;
+import Utils.Texto;
 
 public class VLOS {
 
@@ -10,6 +16,8 @@ public class VLOS {
     private final long MEMORIA_BLOCO = 1024 * 1024;
 
     private VLMemoria mVLMemoria;
+    private VLProcessos mVLProcessos;
+    private Despachante mDespachante;
 
     public VLOS(Maquina eMaquina) {
         mMaquina = eMaquina;
@@ -95,25 +103,70 @@ public class VLOS {
         }
 
 
-
         if (sistemaOK) {
 
             System.out.println("");
             System.out.println("\t                         VLOS                        ");
 
+            mVLProcessos = new VLProcessos();
+            Despachante mDespachante = new Despachante();
 
             dump_memoria();
 
             System.out.println("\t -->> Reservando 64 Blocos para KERNEL");
             mVLMemoria.reservarKernel(64 * MEMORIA_BLOCO);
 
+            mVLMemoria.definirOffsets(0, 64);
+
             dump_memoria();
+
+            Segmento eSegmentoKernel = mVLMemoria.alocarSegmentoDeKernel(12 * mVLMemoria.getTamanhoBloco());
+            Processo mProcesso1 = mVLProcessos.criarProcessoKernel(eSegmentoKernel);
+
+            mostrarProcesso(mProcesso1.getPID());
+
+            // CARREGAR PROCESSOS DE USUARIO
+
+            for (ItemDespachante mItem : mDespachante.carregar("res/proccesses.txt")) {
+
+                //mItem.mostrarDebug();
+
+                Segmento eSegmento = mVLMemoria.alocarSegmentoDeUsuario(mItem.getBlocos() * mVLMemoria.getTamanhoBloco());
+
+                Processo mProcessoCorrente = mVLProcessos.criarProcessoUsuario(mItem.getPrioridade(), eSegmento);
+
+                mostrarProcesso(mProcessoCorrente.getPID());
+
+            }
 
 
         }
 
     }
 
+    public void mostrarProcesso(int ePID) {
+
+        Processo eProcesso = getProcesso(ePID);
+
+        System.out.println("---------------------------------------------");
+
+        System.out.println(" -->> PID : " + eProcesso.getPID());
+        System.out.println("");
+        System.out.println("\t - TIPO        : " + eProcesso.getTipoFormatado());
+        System.out.println("\t - PRIORIDADE  : " + eProcesso.getPrioridade());
+        System.out.println("\t - OFFSET      : " + eProcesso.getOffset());
+        System.out.println("\t - BLOCOS      : " + eProcesso.getBlocos());
+        System.out.println("\t - IMPRESSORA  : " + "");
+        System.out.println("\t - SCANNER     : " + "");
+        System.out.println("\t - DRIVER      : " + "");
+
+        System.out.println("---------------------------------------------");
+
+    }
+
+    public Processo getProcesso(int ePID) {
+        return mVLProcessos.getProcesso(ePID);
+    }
 
     public void dump_memoria() {
 
