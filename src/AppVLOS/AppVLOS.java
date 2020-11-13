@@ -2,6 +2,9 @@ package AppVLOS;
 
 import Hardware.*;
 import VLOS.VLOS;
+import VLUtils.OARoad;
+
+import java.awt.*;
 
 
 public class AppVLOS {
@@ -11,8 +14,12 @@ public class AppVLOS {
         System.out.println("");
         System.out.println("UnB 2020.01 - ISO");
         System.out.println("");
-        System.out.println("\t Aluno : Luan Freitas - 17/0003191");
-        System.out.println("\t Aluno : Vinicius Martins - 17/0157962");
+        System.out.println("\t Aluno : Luan Freitas      -  17/0003191");
+        System.out.println("\t Aluno : Vinicius Martins  -  17/0157962");
+
+        OARoad mOARoadmap = new OARoad("res/roadmap.trilha");
+        mOARoadmap.exportarImagemHV("res/roadmap.png", new Color(52, 73, 94), new Color(52, 73, 94));
+
 
         System.out.println("");
 

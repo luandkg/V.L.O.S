@@ -52,4 +52,33 @@ public class Utils {
 
     }
 
+
+    public String getIntCasas(int e, int c) {
+
+        String ret = String.valueOf(e);
+        while (ret.length() < c) {
+            ret = "0" + ret;
+        }
+        return ret;
+    }
+
+    public String getLongCasas(long e, int c) {
+
+        String ret = String.valueOf(e);
+        while (ret.length() < c) {
+            ret = "0" + ret;
+        }
+        return ret;
+    }
+
+    public String getOrganizado(String e, int n) {
+        String ret = e;
+
+        while (ret.length() < n) {
+            ret += " ";
+        }
+        return ret;
+
+    }
+
 }

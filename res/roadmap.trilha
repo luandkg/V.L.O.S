@@ -1,0 +1,20 @@
+2020 11 05  -->>  Início do Projeto VLOS
+2020 11 05  -->>  Detecção de Hardware
+
+2020 11 06  -->>  Gerenciador de Memoria - VLMemoria
+2020 11 06  -->>  Paginação da Memoria
+2020 11 06  -->>  Alocação de Blocos da Memoria
+2020 11 06  -->>  Alocação de Blocos da Memoria - Kernel
+2020 11 06  -->>  Alocação de Blocos da Memoria - Usuario
+
+2020 11 10  -->>  Processo
+2020 11 10  -->>  Processo de Kernel
+2020 11 10  -->>  Processo de Usuario
+
+
+2020 11 11  -->>  Gerenciador de Processos - VLProcessos
+2020 11 11  -->>  Processo
+2020 11 11  -->>  Escalonador de Processos de Usuario
+2020 11 11  -->>  Organização de Processos de Kernel
+
+2020 11 13  -->>  Gerenciador de Recursos

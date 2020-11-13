@@ -53,7 +53,7 @@ public class VLMemoria {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
                 eContagem += 1;
-            } else if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
+            } else if (eBloco.getStatus() == BlocoStatus.OCUPADO_KERNEL) {
                 eContagem += 1;
             }
         }
@@ -69,7 +69,7 @@ public class VLMemoria {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
                 eContagem += 1;
-            } else if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
+            } else if (eBloco.getStatus() == BlocoStatus.OCUPADO_KERNEL) {
                 //  eContagem += 1;
             }
         }
@@ -86,7 +86,7 @@ public class VLMemoria {
             Bloco eBloco = mBlocos.get(i);
             if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
                 // eContagem += 1;
-            } else if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
+            } else if (eBloco.getStatus() == BlocoStatus.OCUPADO_KERNEL) {
                 eContagem += 1;
             }
         }
@@ -212,6 +212,7 @@ public class VLMemoria {
 
             for (int i = 0; i < mQuantidadeDeBlocos; i++) {
 
+
                 Bloco eBloco = mBlocos.get(i);
                 if (eBloco.getStatus() == BlocoStatus.RESERVADO_KERNEL) {
 
@@ -222,6 +223,8 @@ public class VLMemoria {
                     if (eReservando >= eReservar) {
                         break;
                     }
+
+                    eOffset += 1;
                 }
 
             }
@@ -275,7 +278,7 @@ public class VLMemoria {
                         break;
                     }
                 } else if (eBloco.getStatus() == BlocoStatus.OCUPADO) {
-                    eOffset+=1;
+                    eOffset += 1;
                 }
 
             }
@@ -295,9 +298,9 @@ public class VLMemoria {
 
     }
 
-    public void definirOffsets(int eKernel,int eUsuario){
-        KERNEL_OFFSET=eKernel;
-        USUARIO_OFFSET=eUsuario;
+    public void definirOffsets(int eKernel, int eUsuario) {
+        KERNEL_OFFSET = eKernel;
+        USUARIO_OFFSET = eUsuario;
     }
 
 }
