@@ -89,6 +89,10 @@ public class Processo {
         return mProcessado + " de " + mTamanho;
     }
 
+    public int getProcessado() {
+        return mProcessado;
+    }
+
     public void mostrar() {
 
 

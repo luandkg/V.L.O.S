@@ -189,7 +189,18 @@ public class VLProcessos {
     }
 
 
-    public boolean temProcessoKernelEsperando() {
+    public ArrayList<Processo> getProcessosUsuario_Fila1() {
+        return mUsuario_Processos_01;
+    }
+    public ArrayList<Processo> getProcessosUsuario_Fila2() {
+        return mUsuario_Processos_02;
+    }
+    public ArrayList<Processo> getProcessosUsuario_Fila3() {
+        return mUsuario_Processos_03;
+    }
+
+
+        public boolean temProcessoKernelEsperando() {
 
         boolean tem = false;
 

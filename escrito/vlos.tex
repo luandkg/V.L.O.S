@@ -50,12 +50,11 @@
 \small{\textbf{Resumo:}}
 \noindent
 \small
-%TEXTO DO RESUMO (em português}
-Resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo.
+Implementação do projeto VLOS - Vinícius e Luan Operating System para a disciplina de Introdução à Sistemas Operacionais, com gerência de memória, gerência de processos, gerência de  recursos e gerência de arquivos.
 
 \noindent
 %PALAVRAS-CHAVE} 
-\textbf{Palavras-chave}: PC1, PC2, PC3 e PC4.
+\textbf{Palavras-chave}: VLOS, Sistema Operacional, Processos e Memória.
 \end{footnotesize}
 
 \textual
@@ -67,45 +66,46 @@ Resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo resumo res
 \label{secIntroducao}
 \normalsize
 % TEXTO DA INTRODUCAO
-Introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao.
+A ideia central é a implementação de um Pseudo Sistema Operacional com gerência de memória, gerência de processos e gerência de recursos, implementando as técnicas de paginação para alocação de memória e escalonamento Robin Round \cite {maziero2019} para gerência e fluxo de processos de usuário,com a técnica de First Fit \cite {tanebaum2010} para processos do Kernel e sistema de prioridade em múltiplas filas para processos de usuários;
 
-Introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao introdu\c c\~ao.
+O projeto utiliza dois arquivos de entrada de dados para carregar o fluxo de tarefas a serem executadas pelo sistema operacional.
 
 \section{Desenvolvimento}
 % TEXTO DO DESENVOLVIMENTO
-Na se\c c\~ao de desenvolvimento voc\^es usar\~ao muitas refer\^encias!!!
+A primeira decisão foi a linguagem de programação utilizada pelo projeto, no caso JAVA, o principal motivo da escolha foi porque ambos os implementadores do projeto possuem um bom domínio da linguagem e conhecimento de técnicas de padrões de projeto utilizadas em JAVA.
 
-\textbackslash nocite\{rotuloDaReferencia\}, faz com que uma cita\c c\~ao que n\~ao foi citada no texto apare\c ca nas Refer\^encias Bibliogr\'aficas. \textbf{Exemplo de uso:} \textbackslash nocite\{tanebaum2010\} 
+A segunda decisão foi se seria necessário a requisição de alguma biblioteca de terceiros para o projeto, no caso ficou de acordo que nao seria realizada nenhuma dependência de bibliotecas *.jars para o projeto.
 
-De acordo\citeonline{tanebaum2010}, n\~ao importa o que ele disse. S\'o estou fazendo uma cita\c c\~ao indireta. 
-
-"($\cdots$) cita\c c\~ao direta com at\'e 3 linhas, cita\c c\~ao direta com at\'e 3 linhas, cita\c c\~ao direta com at\'e 3 linhas, cita\c c\~ao direta com at\'e 3 linhas, cita\c c\~ao direta com at\'e 3 linhas cita\c c\~ao direta com at\'e 3 linhas cita\c c\~ao direta com at\'e 3 linhas ($\cdots$)" \cite[p.~34]{tanebaum2010}. 
+O projeto foi totalmente desenvolvido de forma versionada utilizando ferramenta GIT e a plataforma de compartilhamento GITHUB.
  
 \vspace{24pt} %dois espacos de 12
 \begin{citacao}
-"Cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas, cita\c c\~ao direta com mais de 3 linhas. \cite[p.~34]{tanebaum2010}. 
+"A fim de projetar um algoritmo de escalonamento, é necessário ter alguma ideia do que um bom algoritmo deve fazer. Certas metas dependem do ambiente (em lote, interativo ou de tempo real), mas algumas são desejáveis em todos os casos. \cite[p.~106]{tanebaum2010}. 
 \end{citacao}
 \vspace{24pt} %dois espacos de 12
 
-Quando for preencher o arquivo "referencias.bib", no campo "author", se houverem dois ou mais autores, preenche os nomes normalmente separando-os por "and". Exemplo: \textit{Berg Dantas and Juliana Schivani}. Deve-se fazer isso sempre. Caso haja mais de 3 autores, o latex seleciona sozinho o primeiro e completa com o \textit{et al.} (significa "e outros" em latim). 
+O projeto foi divido em pacotes como forma de tornar mais legível e usual o seu desenvolvimento, entre os pacotes encontram : Despachante, Memória, Processo e Recurso.
 
  
-\subsection{Materiais}
-Materiais materiais materiais materiais materiais materiais materiais materiais materiais materiais materiais materiais materiais.
+\subsection{Dificuldades}
+Entre as dificuldades encontradas durante a implementação do projeto, destacam-se a implementação do algoritmo de escalonamento Round Robin e a técnica de paginação da memória em páginas.
 
-\subsection{M\'etodo}
-M\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo m\'etodo.
+Para a implementação do algoritmo de escalonamento foi necessário uma revisão de literatura e uma sequência de aulas do Algoritmos de Escalonamento da UNIVESP e Neso Academy ambas disponível na Plataforma YouTube.
 
-\subsubsection{Testes}
-Testes testes testes testes testes testes testes testes testes testes testes testes testes testes testes testes testes.
+Já para a implementação da técnica de Paginação de Memória, foi preciso reassistir a aula sobre o assunto disponível na Plataforma Teams.
+
+
+\subsection{Testes}
+Para realização de testes durante a implementação foi necessário o desenvolvimento de um pacote especifico dentro do projeto para controle e verificação de eficiência de algumas funções específicas do projeto, como disparo de processo, carregamento de tarefas de arquivo externo, impressão de debugs  e outros.
+
 
 \section{Resultados}
-Resultados resultados resultados resultados resultados resultados resultados resultados.
+O pseudo sistema operacional consegue disparar processos em modo Kernel e modo Usuário, sendo que no modo Kernel o processo executa pela técnica de First Fit em tempo real após fila de espera e no modo usuário pelo escalonamento Round robin com 3 filas de prioridade com quantum de 1 segundo, no caso do VLOS 1 segundo é igual a 10 ciclos de processamento.
 
 
 \section{Considera\c c\~oes finais}
 % TEXTO DA CONCLUSAO
-Considera\c c\~oes finais considera\c c\~oes finais considera\c c\~oes finais considera\c c\~oes finais considera\c c\~oes finais considera\c c\~oes finais.
+Foi um trabalho complexo e que requereu muito tempo e dedicação para seu planejamento, desenvolvimento e teste.
 
 \renewcommand{\bibsection}{\section*{REFER\^ENCIAS BIBLIOGR\'AFICAS}}
 \bibliographystyle{abntex2-alf}

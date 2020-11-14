@@ -1,6 +1,7 @@
 package VLOS;
 
 import Hardware.*;
+import Testes.Teste_Alpha;
 import VLOS.Despachante.Despachante;
 import VLOS.Despachante.ItemDespachante;
 import VLOS.Memoria.Segmento;
@@ -38,6 +39,7 @@ public class VLOS {
 
     private Utils mUtils;
     private Dumper mDumper;
+    private Teste_Alpha mTeste_Alpha;
 
     public VLOS(Maquina eMaquina) {
 
@@ -58,6 +60,8 @@ public class VLOS {
         mTemMemoria = false;
         mTemHD = false;
         mLigado = false;
+
+        mTeste_Alpha = new Teste_Alpha();
 
     }
 
@@ -86,6 +90,8 @@ public class VLOS {
             Despachante mDespachante = new Despachante();
             ArrayList<ItemDespachante> mDespachantes = mDespachante.carregar("res/proccesses.txt");
 
+            mTeste_Alpha.testeProcessosSimultaneosMultiplasFilas(mDespachantes);
+
             mTempoContagem = 0;
             mCicloContagem = 0;
             mQuantizando = 0;
@@ -111,7 +117,8 @@ public class VLOS {
             esperar();
 
 
-            // LOOP DO SISTEMA OPERACIONAL
+            // LOOP NUCLEO DO SISTEMA OPERACIONAL
+
             while (mLigado) {
 
                 despachar(mDespachantes);
@@ -321,6 +328,12 @@ public class VLOS {
                 System.out.println("\tEscalonando Processo de Usuario");
                 System.out.println("\t\t PID         = " + mEscalonado.getPID());
                 System.out.println("\t\t Prioridade  = " + mEscalonado.getPrioridade());
+
+                if (mEscalonado.getProcessado() == 0) {
+                    System.out.println("\t\t Iniciar Processo");
+                }else{
+                    System.out.println("\t\t Continuar Processo");
+                }
 
                 mEscalonado.mudarStatus(ProcessoStatus.EXECUTANDO);
                 mEscalonado.mostrar();

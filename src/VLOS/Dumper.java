@@ -19,6 +19,7 @@ public class Dumper {
         System.out.println("\t-----------------------------------------------------");
         System.out.println("\t - PROCESSOS ");
 
+        System.out.println("\t\t - KERNEL");
         for (Processo eProcesso : mVLProcessos.getProcessosKernel()) {
 
             String mP0 = " - PROCESSO KERNEL  : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
@@ -28,11 +29,12 @@ public class Dumper {
             String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
             String mP5 = " | Processamento : " + eProcesso.getProcessadoStatus();
 
-            System.out.println("\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
+            System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
 
         }
 
-        for (Processo eProcesso : mVLProcessos.getProcessosUsuario()) {
+        System.out.println("\t\t - FILA 1");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila1()) {
 
 
             String mP0 = " - PROCESSO USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
@@ -42,7 +44,37 @@ public class Dumper {
             String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
             String mP5 = " | Processamento : " + eProcesso.getProcessadoStatus();
 
-            System.out.println("\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
+            System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
+
+        }
+
+        System.out.println("\t\t - FILA 2");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila2()) {
+
+
+            String mP0 = " - PROCESSO USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
+            String mP1 = " | Prioridade : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
+            String mP2 = " | Memoria Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 8);
+            String mP3 = " | Blocos Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 8);
+            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
+            String mP5 = " | Processamento : " + eProcesso.getProcessadoStatus();
+
+            System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
+
+        }
+
+        System.out.println("\t\t - FILA 3");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila3()) {
+
+
+            String mP0 = " - PROCESSO USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
+            String mP1 = " | Prioridade : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
+            String mP2 = " | Memoria Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 8);
+            String mP3 = " | Blocos Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 8);
+            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
+            String mP5 = " | Processamento : " + eProcesso.getProcessadoStatus();
+
+            System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5);
 
         }
 
