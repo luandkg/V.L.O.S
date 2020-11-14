@@ -7,6 +7,8 @@ public class VLRecursos {
     private int mRID;
     private ArrayList<ControladorRecurso> mControladores;
 
+    // VLRECURSOS E RESPONSAVVEL POR GERENCIAR OS RECURSOS DO VLOS
+
 
     public VLRecursos() {
 

@@ -7,6 +7,8 @@ public class Maquina {
     private Processador mProcessador;
     private ArrayList<Dispositivo> mDispositivos;
 
+    // CLASSE MAQUINA
+
     public Maquina(Processador eProcessador) {
 
         mProcessador = eProcessador;

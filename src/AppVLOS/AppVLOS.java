@@ -24,23 +24,25 @@ public class AppVLOS {
         System.out.println("");
 
 
+        // MONTANDO A MAQUINA i368 COM O PROCESSADOR x86
         Maquina_i368 mMaquina = new Maquina_i368();
 
-        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 + 512) * 1024 * 1024));
 
+        // ADICIONANDO HARDWARE A MAQUINA
+        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 + 512) * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("ST2000DM008", 500 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("WD20PURX", 200 * 1024 * 1024));
-
         mMaquina.adicionarDispositivo(new Impressora("Ink Tank 416 Z4B55A HP"));
         mMaquina.adicionarDispositivo(new Impressora("Deskjet Ink Advantage 2376 7WQ02A HP"));
-
         mMaquina.adicionarDispositivo(new Scanner("Avision FB5000"));
-
         mMaquina.adicionarDispositivo(new Modem("Mercusys MW301R"));
         mMaquina.adicionarDispositivo(new Modem("TP-Link AC1200"));
 
+
+        // INSTALANDO SISTEMA OPERACIONAL VLOS NA MAQUINA i368
         VLOS mVLOS = new VLOS(mMaquina);
 
+        // LIGANDO A MAQUINA i368
         mVLOS.ligar();
 
 

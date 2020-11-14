@@ -6,6 +6,16 @@ import java.util.ArrayList;
 
 public class Teste_Alpha {
 
+    // CLASSE RESPONSAVEL POR CRIAR TESTES ESPECIFICOS
+    //
+    // testeProcessosEmTempos                           ->  Cria Processos em Tempos diferentes
+    // testeProcessosSimultaneos                        ->  Cria Processos Simultaneos em Tempos diferentes
+    // testeProcessosSimultaneosNoMesmoTempo            ->  Cria Processos Simultaneos no mersmo Tempo
+    // testeProcessosSimultaneosEmTemposDiferentes      ->  Cria Processos Simultaneos em Tempos diferentes
+    // testeProcessosPrioritariosNoMesmoTempo           ->  Cria Processos Prioritarios no mesmo Tempo
+    // testeProcessosSimultaneosMultiplasFilas          ->  Cria Processos Simultaneos em Tempos diferentes e em Multiplas Filas
+
+
     public void testeProcessosEmTempos(ArrayList<ItemDespachante> mDespachantes) {
 
         mDespachantes.clear();
@@ -17,7 +27,24 @@ public class Teste_Alpha {
 
     }
 
-    public void testeProcessosSimultaneos(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosSimultaneosNoMesmoTempo(ArrayList<ItemDespachante> mDespachantes) {
+
+        mDespachantes.clear();
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 0, 2);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 0, 2);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 0, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 0, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 0, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 7, 0, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 0, 1);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 4, 0, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 0, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 1, 0, 5);
+
+
+    }
+
+    public void testeProcessosSimultaneosEmTemposDiferentes(ArrayList<ItemDespachante> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 0, 2);
@@ -65,18 +92,18 @@ public class Teste_Alpha {
 
     }
 
-    public void testeProcessosPrioritarios(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosPrioritariosNoMesmoTempo(ArrayList<ItemDespachante> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 5, 2);
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 5, 3, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 1, 1);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 4, 0, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 2, 1, 1);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 4, 0, 5);
 
 
     }
 
-    public void adicionarProcessoUsuarioEmFila(ArrayList<ItemDespachante> mDespachantes, int eTempo, int eTamanho, int ePrioridade, int eBlocos) {
+    private void adicionarProcessoUsuarioEmFila(ArrayList<ItemDespachante> mDespachantes, int eTempo, int eTamanho, int ePrioridade, int eBlocos) {
 
         ItemDespachante eItem = new ItemDespachante();
         eItem.setInicializacao(eTempo);

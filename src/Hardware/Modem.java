@@ -4,6 +4,9 @@ public class Modem extends Dispositivo  {
 
     private String mModelo;
 
+    // IMPLEMENTACAO DO MODEM UTILIZANDO A CLASSE ABSTRATA DISPOSITIVO
+    // TIPO = MODEM
+
     public Modem(String eModelo){
 
         mModelo=eModelo;

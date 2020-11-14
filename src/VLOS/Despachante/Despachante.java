@@ -1,9 +1,9 @@
 package VLOS.Despachante;
 
-import Utils.Texto;
-import VLOS.Processo.Processo;
-import VLOS.VLOS;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Despachante {
@@ -11,11 +11,11 @@ public class Despachante {
 
     public ArrayList<ItemDespachante> carregar(String eArquivo) {
 
-        String eConteudo = Texto.Ler(eArquivo);
+        String eConteudo = Ler(eArquivo);
 
-       // System.out.println("---------------------------------------------");
-       // System.out.println(eConteudo);
-      //  System.out.println("---------------------------------------------");
+        // System.out.println("---------------------------------------------");
+        // System.out.println(eConteudo);
+        //  System.out.println("---------------------------------------------");
 
         ArrayList<ItemDespachante> mLista = new ArrayList<ItemDespachante>();
 
@@ -79,6 +79,34 @@ public class Despachante {
         return mLista;
     }
 
+    private String Ler(String eArquivo) {
+
+        String ret = "";
+
+        try {
+            FileReader arq = new FileReader(eArquivo);
+            BufferedReader lerArq = new BufferedReader(arq);
+
+            String linha = lerArq.readLine();
+
+            ret += linha;
+
+            while (linha != null) {
+
+                linha = lerArq.readLine();
+                if (linha != null) {
+                    ret += "\n" + linha;
+                }
+
+            }
+
+            arq.close();
+        } catch (IOException e) {
+
+        }
+
+        return ret;
+    }
 
 
 }

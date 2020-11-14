@@ -15,6 +15,16 @@ public class VLMemoria {
     private long KERNEL_OFFSET;
     private long USUARIO_OFFSET;
 
+
+    // VLMEMORIA : CLASSE RESPONSAVEL POR GERENCIAR A MEMORIA
+    //
+    // DIVIDE A MEMORIA EM PAGINAS FISICAS : BLOCOS
+    // RESERVA PAGINAS PARA KERNEL
+    // ALOCA PAGINAS PARA PROCESSO KERNEL
+    // ALOCA PAGINAS PARA PROCESSO USUARIO
+
+
+
     public VLMemoria(Memoria eMemoria, long eTamanhoDoBloco) {
 
         mMemoria = eMemoria;
@@ -190,7 +200,7 @@ public class VLMemoria {
 
     }
 
-    public Segmento alocarSegmentoDeKernel(long eTamanho) {
+    public MemoriaAlocada alocarBlocosDeKernel(long eTamanho) {
 
         ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
 
@@ -239,13 +249,13 @@ public class VLMemoria {
 
         }
 
-        return new Segmento(mTamanho, eOffset, eAlocando);
+        return new MemoriaAlocada(mTamanho, eOffset, eAlocando);
 
 
     }
 
 
-    public Segmento alocarSegmentoDeUsuario(long eTamanho) {
+    public MemoriaAlocada alocarBlocosDeUsuario(long eTamanho) {
 
         ArrayList<Bloco> eAlocando = new ArrayList<Bloco>();
 
@@ -293,7 +303,7 @@ public class VLMemoria {
 
         }
 
-        return new Segmento(mTamanho, eOffset, eAlocando);
+        return new MemoriaAlocada(mTamanho, eOffset, eAlocando);
 
 
     }

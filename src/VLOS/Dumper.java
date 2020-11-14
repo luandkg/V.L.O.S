@@ -8,6 +8,8 @@ import VLOS.Recurso.VLRecursos;
 
 public class Dumper {
 
+    // CLASSE Dumper : Responsavel por imprimir logs no Console do Terminal
+
     private Utils mUtils;
 
     public Dumper() {

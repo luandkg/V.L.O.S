@@ -1,27 +1,30 @@
 package VLOS.Processo;
 
-import VLOS.Memoria.Segmento;
+import VLOS.Memoria.MemoriaAlocada;
 
 public class Processo {
+
+    // PROCESSO : CLASSE RESPONSAVEL POR REPRESENTAR UM PROCESSO
+
 
     private int mPID;
     private ProcessoTipo mProcessoTipo;
     private int mPrioridade;
 
-    private Segmento mSegmento;
+    private MemoriaAlocada mMemoriaAlocada;
 
     private ProcessoStatus mProcessoStatus;
 
     private int mProcessado;
     private int mTamanho;
 
-    public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, int eTamanho, Segmento eSegmento) {
+    public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, int eTamanho, MemoriaAlocada eMemoriaAlocada) {
 
         mPID = ePID;
         mProcessoTipo = eTipo;
 
         mPrioridade = ePrioridade;
-        mSegmento = eSegmento;
+        mMemoriaAlocada = eMemoriaAlocada;
 
         mProcessado = 0;
         mTamanho = eTamanho;
@@ -58,11 +61,11 @@ public class Processo {
     }
 
     public long getOffset() {
-        return mSegmento.getOffset();
+        return mMemoriaAlocada.getOffset();
     }
 
     public int getBlocos() {
-        return mSegmento.getBlocos();
+        return mMemoriaAlocada.getBlocos();
     }
 
     public boolean isKernel() {

@@ -2,6 +2,10 @@ package VLOS.Recurso;
 
 public class ControladorRecurso {
 
+    // CONTROLADOR_RECURSO CONTROLA O ACESSO DO RECURSO
+    // STATUS = BLOQUEADO OU DISPONIVEL
+
+
     private Recurso mRecurso;
     private boolean mDisponivel;
 
@@ -30,4 +34,14 @@ public class ControladorRecurso {
     public boolean isBloqueado() {
         return mDisponivel == false;
     }
+
+    public String getStatus() {
+        if (isBloqueado()) {
+            return "BLOQUEADO";
+        } else {
+            return "DISPONIVEL";
+        }
+    }
+
+
 }

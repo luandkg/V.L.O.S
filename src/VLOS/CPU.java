@@ -2,6 +2,8 @@ package VLOS;
 
 public class CPU {
 
+    // CLASSE CPU : Representa a Unidade Central de Processamento
+    
     private boolean mExecutando;
 
     public CPU() {
@@ -20,4 +22,6 @@ public class CPU {
     public void setExecutando(boolean e) {
         mExecutando = e;
     }
+
+
 }

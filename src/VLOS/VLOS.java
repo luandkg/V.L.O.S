@@ -4,7 +4,7 @@ import Hardware.*;
 import Testes.Teste_Alpha;
 import VLOS.Despachante.Despachante;
 import VLOS.Despachante.ItemDespachante;
-import VLOS.Memoria.Segmento;
+import VLOS.Memoria.MemoriaAlocada;
 import VLOS.Memoria.VLMemoria;
 import VLOS.Processo.Processo;
 import VLOS.Processo.ProcessoStatus;
@@ -111,8 +111,8 @@ public class VLOS {
 
             mDumper.dump_memoria(mVLMemoria);
 
-            mVLProcessos.criarProcessoKernel(mVLMemoria.alocarSegmentoDeKernel(3 * mVLMemoria.getTamanhoBloco()), 3);
-            //   mVLProcessos.criarProcessoKernel(mVLMemoria.alocarSegmentoDeKernel(5 * mVLMemoria.getTamanhoBloco()));
+            mVLProcessos.criarProcessoKernel(mVLMemoria.alocarBlocosDeKernel(3 * mVLMemoria.getTamanhoBloco()), 3);
+            //   mVLProcessos.criarProcessoKernel(mVLMemoria.alocarBlocosDeKernel(5 * mVLMemoria.getTamanhoBloco()));
 
             esperar();
 
@@ -248,16 +248,24 @@ public class VLOS {
 
         ArrayList<ItemDespachante> mAdicionar = new ArrayList<ItemDespachante>();
 
+        // OBTEM DESPACHANTES DO TEMPO REQUERIDO
         for (ItemDespachante mItem : mDespachantes) {
-
             if (!mItem.isDespachado()) {
-
                 if (mItem.getInicializacao() == mTempoContagem) {
                     mAdicionar.add(mItem);
                 }
             }
-
         }
+
+        // SE POSSUIR DESPACHANTES ADICIONA NA FILA DE ESCALONAMENTO DE USUARIO DE ACORDO A PRIORIDADE
+        // EXISTEM 3 PRIORIDADES DE USUARIO
+
+        // FILA 1 - PRIOPRIDADE 0
+        // FILA 2 - PRIOPRIDADE 1
+        // FILA 3 - PRIOPRIDADE 2 OU SUPERIOR
+
+        // QUANDO UM PROCESSO SOFRE ENVELHECIMENTO ELE AUMENTA O NUMERO DE PRIORIDADE DO PROCESSO QUE RESULTA NO EFEITO CONTRARIO
+        // QUANTO MENOR O NUMERO DE PRIORIDADE MAIOR A PRIORIDADE
 
         if (mAdicionar.size() > 0) {
 
@@ -266,13 +274,17 @@ public class VLOS {
 
             for (ItemDespachante mItem : mAdicionar) {
 
+                // EXISTE PROCESSO PARA SER ADICIONADO A FILA DE USUARIO
                 mItem.despachar();
 
-                Segmento eSegmento = mVLMemoria.alocarSegmentoDeUsuario(mItem.getBlocos() * mVLMemoria.getTamanhoBloco());
-                Processo mProcessoCorrente = mVLProcessos.criarProcessoUsuario(mItem.getPrioridade(), eSegmento, mItem.getTempoProcessador());
+                // ALOCA RECURSOS PARA INICIAR O PROCESSO
 
-                Processo eProcesso = mVLProcessos.getProcesso(mProcessoCorrente.getPID());
-                eProcesso.mostrar();
+                // ALOCA MEMORIA PARA O PROCESSO
+                MemoriaAlocada eMemoriaAlocada = mVLMemoria.alocarBlocosDeUsuario(mItem.getBlocos() * mVLMemoria.getTamanhoBloco());
+
+
+                Processo mProcessoCorrente = mVLProcessos.criarProcessoUsuario(mItem.getPrioridade(), eMemoriaAlocada, mItem.getTempoProcessador());
+                mProcessoCorrente.mostrar();
 
             }
 
@@ -286,6 +298,8 @@ public class VLOS {
 
 
     public void ociosa() {
+
+        // REALIZA PROCEDIMENTOS DE ESCOLANAMENTO QUANDO A CPU ESTIVER OCIOSA
 
         System.out.println("\t -->> CPU OCIOSA { TEMPO :: " + mTempoContagem + "s CICLO :: " + mCicloContagem + " } ");
 
@@ -331,7 +345,7 @@ public class VLOS {
 
                 if (mEscalonado.getProcessado() == 0) {
                     System.out.println("\t\t Iniciar Processo");
-                }else{
+                } else {
                     System.out.println("\t\t Continuar Processo");
                 }
 
@@ -347,6 +361,8 @@ public class VLOS {
     }
 
     public void executar() {
+
+        // EXECUTA PARTE DO PROCESSO QUE ESTA NA CPU
 
         System.out.println("\t -->> CPU EXECUTANDO { TEMPO :: " + mTempoContagem + "s CICLO :: " + mCicloContagem + " } -->> PID = " + mVLProcessos.getEscalonado().getPID());
 

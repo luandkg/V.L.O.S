@@ -4,6 +4,9 @@ public class Scanner extends Dispositivo  {
 
     private String mModelo;
 
+    // IMPLEMENTACAO DA SCANNER UTILIZANDO A INTERFACE DISPOSITIVO
+    // TIPO = SCANNER
+
     public Scanner(String eModelo){
 
         mModelo=eModelo;

@@ -6,6 +6,8 @@ public class Bloco {
     private BlocoStatus mBlocoStatus;
     private long mID;
 
+    // BLOCO : CLASSE RESPONSAVEL POR REPRESENTAR UM BLOCO DE MEMORIA
+
     public Bloco(VLMemoria eVLMemoria, long eID, BlocoStatus eBlocoStatus) {
 
         mVLMemoria = eVLMemoria;
@@ -15,7 +17,7 @@ public class Bloco {
     }
 
     public long getOffset() {
-        return mID ;
+        return mID;
     }
 
     public void setStatus(BlocoStatus eBlocoStatus) {

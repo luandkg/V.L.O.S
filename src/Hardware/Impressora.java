@@ -2,6 +2,9 @@ package Hardware;
 
 public class Impressora extends Dispositivo  {
 
+    // IMPLEMENTACAO DA IMPRESSORA UTILIZANDO A CLASSE ABSTRATA DISPOSITIVO
+    // TIPO = PRINTER
+
     private String mModelo;
 
     public Impressora(String eModelo){

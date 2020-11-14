@@ -2,6 +2,8 @@ package VLOS.Recurso;
 
 public class Recurso {
 
+    // CLASSE RECURSO REPRESENTA ALGUM RECURSO DO SISTEMA
+
     private int mRID;
     private String mNome;
     private ControladorRecurso mControlador;
@@ -32,10 +34,6 @@ public class Recurso {
     }
 
     public String getStatus() {
-        if (isBloqueado()) {
-            return "BLOQUEADO";
-        } else {
-            return "DISPONIVEL";
-        }
+        return mControlador.getStatus();
     }
 }

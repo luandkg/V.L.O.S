@@ -1,5 +1,13 @@
 package VLOS.Processo;
 
 public enum ProcessoTipo {
-    KERNEL, USUARIO;
+
+    // PROCESSO_TIPO : CLASSE RESPONSAVEL POR REPRESENTAR O TIPO DE UM PROCESSO
+
+
+    KERNEL,
+    USUARIO;
+
+
 }
+

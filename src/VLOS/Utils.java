@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 public class Utils {
 
+    // CLASSE Utils : Unitilario para formatacao de texto, inteiro, e outras informacoes
 
     public String texto_nucleo(int e) {
 
