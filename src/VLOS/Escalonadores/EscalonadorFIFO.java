@@ -1,8 +1,10 @@
-package VLOS.Processo;
+package VLOS.Escalonadores;
+
+import VLOS.Processo.Processo;
 
 import java.util.ArrayList;
 
-public class EscalonadorFIFO {
+public class EscalonadorFIFO implements Escalonador {
 
     private boolean mTemProcesso;
     private Processo mProcesso;
@@ -12,6 +14,10 @@ public class EscalonadorFIFO {
         mTemProcesso = false;
         mProcesso = null;
 
+    }
+
+    public String getNome() {
+        return "Fifo";
     }
 
     public boolean temProcesso() {
@@ -31,7 +37,7 @@ public class EscalonadorFIFO {
 
         // COLOCANDO PROCESSOS PRONTOS NA FILA DE EXECUCAO
         for (Processo eProcesso : mProcessos) {
-            if (eProcesso.getConcluido() == false) {
+            if (eProcesso.isPronto()) {
                 mProntos.add(eProcesso);
             }
         }
@@ -41,6 +47,7 @@ public class EscalonadorFIFO {
             for (Processo eProcesso : mProntos) {
                 mTemProcesso = true;
                 mProcesso = eProcesso;
+                break;
             }
 
         }

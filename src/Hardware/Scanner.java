@@ -1,6 +1,6 @@
 package Hardware;
 
-public class Scanner extends Dispositivo  {
+public class Scanner implements Dispositivo  {
 
     private String mModelo;
 

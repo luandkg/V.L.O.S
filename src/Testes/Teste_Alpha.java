@@ -62,7 +62,7 @@ public class Teste_Alpha {
     }
 
 
-    public void testeProcessosSimultaneosMultiplasFilas(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosSimultaneosMultiplasFilasPrioritarias(ArrayList<ItemDespachante> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 0, 2);
@@ -73,22 +73,27 @@ public class Teste_Alpha {
         adicionarProcessoUsuarioEmFila(mDespachantes, 2, 7, 0, 3);
         adicionarProcessoUsuarioEmFila(mDespachantes, 3, 2, 0, 1);
         adicionarProcessoUsuarioEmFila(mDespachantes, 4, 4, 0, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 3, 0, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 3, 0, 7);
         adicionarProcessoUsuarioEmFila(mDespachantes, 4, 1, 0, 5);
 
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 1, 3, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 2);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 1, 3, 4);
 
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 4, 2, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 5, 1, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 5, 1, 8);
 
         adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 3, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 1, 3, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 1, 3, 9);
 
         adicionarProcessoUsuarioEmFila(mDespachantes, 4, 1, 6, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 1, 5, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 3, 1, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 1, 5, 10);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 3, 1, 12);
+
+        adicionarProcessoUsuarioEmFila(mDespachantes, 6, 3, 2, 12);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 7, 3, 8, 50);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 9, 2, 4, 4);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 10, 6, 5, 5);
 
     }
 

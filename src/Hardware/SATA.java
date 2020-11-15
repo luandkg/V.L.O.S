@@ -1,6 +1,6 @@
 package Hardware;
 
-public class SATA extends Dispositivo  {
+public class SATA implements Dispositivo  {
 
     private String mModelo;
     private long mTamanho;

@@ -24,7 +24,6 @@ public class VLMemoria {
     // ALOCA PAGINAS PARA PROCESSO USUARIO
 
 
-
     public VLMemoria(Memoria eMemoria, long eTamanhoDoBloco) {
 
         mMemoria = eMemoria;
@@ -233,7 +232,7 @@ public class VLMemoria {
                     if (eReservando >= eReservar) {
                         break;
                     }
-
+                } else if (eBloco.getStatus() == BlocoStatus.OCUPADO_KERNEL) {
                     eOffset += 1;
                 }
 

@@ -1,6 +1,6 @@
 package Hardware;
 
-public class Impressora extends Dispositivo  {
+public class Impressora implements Dispositivo  {
 
     // IMPLEMENTACAO DA IMPRESSORA UTILIZANDO A CLASSE ABSTRATA DISPOSITIVO
     // TIPO = PRINTER

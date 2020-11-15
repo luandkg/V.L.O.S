@@ -1,5 +1,7 @@
 package VLOS.Recurso;
 
+import Hardware.Dispositivo;
+
 import java.util.ArrayList;
 
 public class VLRecursos {
@@ -25,9 +27,9 @@ public class VLRecursos {
         return mRecursos;
     }
 
-    public Recurso adicionarRecurso(String eNome) {
+    public Recurso adicionarRecurso(Dispositivo eDispositivo) {
 
-        Recurso eRecurso = new Recurso(mRID, eNome);
+        Recurso eRecurso = new Recurso(mRID, eDispositivo.getTipo());
 
         mRID += 1;
 

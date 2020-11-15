@@ -16,13 +16,25 @@
 2020 11 10  -->>  Processo
 2020 11 10  -->>  Processo de Kernel
 2020 11 10  -->>  Processo de Usuario
+2020 11 10  -->>  Status de Processo
+2020 11 10  -->>  Tipo de Processo
 
 
 2020 11 11  -->>  Gerenciador de Processos - VLProcessos
 2020 11 11  -->>  Processo
 2020 11 11  -->>  CPU
+2020 11 11  -->>  Interface de Escalonador
 2020 11 11  -->>  Escalonador de Processos de Usuario
 2020 11 11  -->>  Organização de Processos de Kernel
 
-2020 11 13  -->>  Gerenciador de Recursos
+2020 11 13  -->>  Gerenciador de Recursos - VLRecursos
 2020 11 13  -->>  Sistema de Testes
+
+2020 11 14  -->>  Ordenacação das Filas de Processos de Usuário
+2020 11 14  -->>  Refatoramento do Escalonador Fifo
+2020 11 14  -->>  Refatoramento do Escalonador Robin Round Prioritário
+
+2020 11 15  -->>  Tempo de Inicialização Processo
+2020 11 15  -->>  Tempo de Conclusao Processo
+2020 11 15  -->>  Tempo de Espera Processo
+2020 11 15  -->>  Implementação Sistema de Debug

@@ -11,6 +11,10 @@ public class Processo {
     private ProcessoTipo mProcessoTipo;
     private int mPrioridade;
 
+    private long mTempoCriacao;
+    private long mTempoConclusao;
+    private long mTempoExecucaoInicio;
+
     private MemoriaAlocada mMemoriaAlocada;
 
     private ProcessoStatus mProcessoStatus;
@@ -18,12 +22,17 @@ public class Processo {
     private int mProcessado;
     private int mTamanho;
 
-    public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, int eTamanho, MemoriaAlocada eMemoriaAlocada) {
+    public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, long eTempoCriacao, int eTamanho, MemoriaAlocada eMemoriaAlocada) {
 
         mPID = ePID;
         mProcessoTipo = eTipo;
 
         mPrioridade = ePrioridade;
+
+        mTempoCriacao = eTempoCriacao;
+        mTempoConclusao = 0;
+        mTempoExecucaoInicio = 0;
+
         mMemoriaAlocada = eMemoriaAlocada;
 
         mProcessado = 0;
@@ -36,8 +45,16 @@ public class Processo {
         return mProcessoStatus;
     }
 
-    public boolean getConcluido() {
+    public boolean isConcluido() {
         return mProcessoStatus == ProcessoStatus.CONCLUIDO;
+    }
+
+    public boolean isPronto() {
+        return mProcessoStatus == ProcessoStatus.PRONTO;
+    }
+
+    public boolean isEsperando() {
+        return mProcessoStatus == ProcessoStatus.ESPERANDO;
     }
 
     public void mudarStatus(ProcessoStatus e) {
@@ -82,9 +99,9 @@ public class Processo {
 
     public String getTipoFormatado() {
         if (mProcessoTipo == ProcessoTipo.KERNEL) {
-            return "Kernel";
+            return "KERNEL";
         } else {
-            return "Usuario";
+            return "USUARIO";
         }
     }
 
@@ -96,32 +113,42 @@ public class Processo {
         return mProcessado;
     }
 
-    public void mostrar() {
+    public void processar() {
 
+        if (mProcessado < mTamanho) {
+            mProcessado += 1;
+        }
 
-        System.out.println("\t---------------------------------------------");
-
-        System.out.println("\t -->> PID : " + this.getPID());
-        System.out.println("\t");
-        System.out.println("\t\t - TIPO        : " + this.getTipoFormatado());
-        System.out.println("\t\t - PRIORIDADE  : " + this.getPrioridade());
-        System.out.println("\t\t - STATUS      : " + this.getStatus());
-        System.out.println("\t\t - OFFSET      : " + this.getOffset());
-        System.out.println("\t\t - BLOCOS      : " + this.getBlocos());
-        System.out.println("\t\t - IMPRESSORA  : " + "");
-        System.out.println("\t\t - SCANNER     : " + "");
-        System.out.println("\t\t - DRIVER      : " + "");
-        System.out.println("\t\t - PROCESSADO  : " + this.getProcessadoStatus());
-
-        System.out.println("\t---------------------------------------------");
-
-
-    }
-
-    public void aumentarProcessado() {
-        mProcessado += 1;
         if (mProcessado >= mTamanho) {
             mProcessoStatus = ProcessoStatus.CONCLUIDO;
         }
+
+    }
+
+    public void verificar() {
+        if (mProcessado >= mTamanho) {
+            mProcessoStatus = ProcessoStatus.CONCLUIDO;
+        }
+    }
+
+
+    public long getTempoCriacao() {
+        return mTempoCriacao;
+    }
+
+    public long getTempoConclusao() {
+        return mTempoConclusao;
+    }
+
+    public long getTempoExecucaoInicio() {
+        return mTempoExecucaoInicio;
+    }
+
+    public void setTempoConclusao(long eTempoConclusao) {
+        mTempoConclusao = eTempoConclusao;
+    }
+
+    public void setTempoExecucaoInicio(long eTempoExecucaoInicio) {
+        mTempoExecucaoInicio = eTempoExecucaoInicio;
     }
 }

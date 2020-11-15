@@ -1,10 +1,10 @@
 package Hardware;
 
-public abstract class Dispositivo {
+public interface Dispositivo {
 
     // INTERFACE ABSTRATA PARA REPRESENTAR HARDWARE
     // METODO OBRIGATORIO getTipo
 
-    public abstract String getTipo();
+    String getTipo();
 
 }

@@ -1,6 +1,6 @@
 package Hardware;
 
-public class Memoria extends Dispositivo {
+public class Memoria implements Dispositivo {
 
     private String mModelo;
     private long mTamanho;

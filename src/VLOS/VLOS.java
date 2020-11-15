@@ -2,7 +2,7 @@ package VLOS;
 
 import Hardware.*;
 import Testes.Teste_Alpha;
-import VLOS.Despachante.Despachante;
+import VLOS.Despachante.ArquivoDespachante;
 import VLOS.Despachante.ItemDespachante;
 import VLOS.Memoria.MemoriaAlocada;
 import VLOS.Memoria.VLMemoria;
@@ -18,7 +18,7 @@ public class VLOS {
 
     private Maquina mMaquina;
 
-    private final long MEMORIA_BLOCO = 1024 * 1024;
+    private long mMEMORIA_BLOCO;
 
     private VLMemoria mVLMemoria;
     private VLProcessos mVLProcessos;
@@ -28,8 +28,10 @@ public class VLOS {
     private boolean mTemHD;
 
     private CPU mCPU;
+    private Memoria mMemoria;
+    private ArrayList<Dispositivo> mRecursosDispositivos;
 
-    private long mTempoContagem;
+    private long mTempo;
     private int mCicloContagem;
     private int mCicloMaximo;
 
@@ -41,18 +43,27 @@ public class VLOS {
     private Dumper mDumper;
     private Teste_Alpha mTeste_Alpha;
 
+    private boolean mDEBUG_PROCESSOS;
+    private boolean mDEBUG_ESCALONADOR;
+    private boolean mDEBUG_MEMORIA;
+    private boolean mDEBUG_PROCESSO_CORRENTE;
+    private boolean mDEBUG_DESPACHANTE;
+    private boolean mDILATADOR_TEMPORAL;
+
     public VLOS(Maquina eMaquina) {
 
         mMaquina = eMaquina;
 
         mUtils = new Utils();
 
-        mTempoContagem = 0;
+        mTempo = 0;
         mCicloContagem = 0;
-        mCicloMaximo = 10;
-
-        mQuantum = 1 * 10; // 1 SEGUNDO = 10 CICLOS DE PROCESSAMENTO DA CPU
+        mCicloMaximo = 0;
+        mQuantum = 0;
         mQuantizando = 0;
+        mMEMORIA_BLOCO = 0;
+
+        mRecursosDispositivos = new ArrayList<Dispositivo>();
 
         mCPU = new CPU();
         mDumper = new Dumper();
@@ -63,61 +74,82 @@ public class VLOS {
 
         mTeste_Alpha = new Teste_Alpha();
 
+        mDEBUG_PROCESSOS = true;
+        mDEBUG_ESCALONADOR = true;
+        mDEBUG_MEMORIA = true;
+        mDEBUG_PROCESSO_CORRENTE = true;
+        mDEBUG_DESPACHANTE = true;
+        mDILATADOR_TEMPORAL = true;
+
+        debugarTudo();
+
     }
+
+    public void debugarTudo() {
+        mDEBUG_PROCESSOS = true;
+        mDEBUG_ESCALONADOR = true;
+        mDEBUG_MEMORIA = true;
+        mDEBUG_PROCESSO_CORRENTE = true;
+        mDEBUG_DESPACHANTE = true;
+    }
+
+    public void debugarEscalonador() {
+        mDEBUG_PROCESSOS = true;
+        mDEBUG_ESCALONADOR = true;
+        mDEBUG_MEMORIA = false;
+        mDEBUG_PROCESSO_CORRENTE = true;
+        mDEBUG_DESPACHANTE = false;
+    }
+
 
     public void ligar() {
 
         mLigado = true;
+        mTempo = 0;
+        mQuantum = 0;
+        mCicloContagem = 0;
+        mCicloMaximo = 10;
+        mQuantizando = 0;
+        mMEMORIA_BLOCO = 0;
 
+        // BOOT HARDWARE DE SISTEMA
         detectarHardware();
+
+        esperar();
 
         if (mTemMemoria && mTemHD) {
 
+            print_inicializacao();
 
-            System.out.println("");
-            System.out.println("");
-            System.out.println("\t-----------------------------------------------------");
-            System.out.println("\t--                                                 --");
-            System.out.println("\t--                        VLOS                     --");
-            System.out.println("\t--                                                 --");
-            System.out.println("\t-----------------------------------------------------");
-            System.out.println("\t-----------------------------------------------------");
-            System.out.println("\t-----------------------------------------------------");
-            System.out.println("");
+            mQuantum = 1 * 10; // 1 SEGUNDO = 10 CICLOS DE PROCESSAMENTO DA CPU
+            mMEMORIA_BLOCO = 1024 * 1024;
+
+            mVLProcessos = new VLProcessos(mCPU);
+            mVLMemoria = new VLMemoria(mMemoria, mMEMORIA_BLOCO);
+            mVLRecursos = new VLRecursos();
+
+            for (Dispositivo mDispositivoRecurso : mRecursosDispositivos) {
+                mVLRecursos.adicionarRecurso(mDispositivoRecurso);
+            }
 
 
             // CARREGAR PROCESSOS DE USUARIO
-            Despachante mDespachante = new Despachante();
-            ArrayList<ItemDespachante> mDespachantes = mDespachante.carregar("res/proccesses.txt");
+            ArrayList<ItemDespachante> mDespachantes = ArquivoDespachante.carregar("res/proccesses.txt");
 
-            mTeste_Alpha.testeProcessosSimultaneosMultiplasFilas(mDespachantes);
+            mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachantes);
 
-            mTempoContagem = 0;
-            mCicloContagem = 0;
-            mQuantizando = 0;
-            mQuantum = 1 * 10; // 1 SEGUNDO = 10 CICLOS DE PROCESSAMENTO DA CPU
 
-            mVLProcessos = new VLProcessos(mCPU);
-
-            mDumper.dump_memoria(mVLMemoria);
-
-            System.out.println("\t -->> Reservando 64 Blocos para KERNEL");
-
-            esperar();
-
-            mVLMemoria.reservarKernel(64 * MEMORIA_BLOCO);
-
-            mVLMemoria.definirOffsets(0, 64);
-
-            mDumper.dump_memoria(mVLMemoria);
-
-            mVLProcessos.criarProcessoKernel(mVLMemoria.alocarBlocosDeKernel(3 * mVLMemoria.getTamanhoBloco()), 3);
-            //   mVLProcessos.criarProcessoKernel(mVLMemoria.alocarBlocosDeKernel(5 * mVLMemoria.getTamanhoBloco()));
-
-            esperar();
-
+            iniciar();
 
             // LOOP NUCLEO DO SISTEMA OPERACIONAL
+            // A CADA CICLO DO LOOP DO SISTEMA :
+            //
+            //  - Contador de Ciclo +1
+            //  - Se o contador de Ciclo == 10 entao Tempo +1 e Ciclo = 0
+            //  - Se existir despachantes de tempo igual ao mTempo entao dispara
+            //  - Se a CPU estiver OCIOSA entao escalona processos
+            //  - Se a CPU estiver executando e o quantum tiver atingido entao INTERROMPRE processo e escalona
+            //  - Para efeito de visualizacao e DEBUG coloca-se um espacador de tempo entre cada ciclo de 300 millisegundos
 
             while (mLigado) {
 
@@ -141,6 +173,20 @@ public class VLOS {
     }
 
 
+    public void print_inicializacao() {
+        System.out.println("");
+        System.out.println("");
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t--                                                 --");
+        System.out.println("\t--                        VLOS                     --");
+        System.out.println("\t--                                                 --");
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("");
+    }
+
+
     public void detectarHardware() {
 
         System.out.println("\t-----------------------------------------------------");
@@ -153,24 +199,20 @@ public class VLOS {
         mTemHD = false;
 
 
-        mVLMemoria = null;
-        mVLRecursos = new VLRecursos();
-
-
         for (Dispositivo mDispositivo : mMaquina.getDispositivos()) {
 
             if (mDispositivo instanceof Memoria) {
 
-                Memoria mMemoria = (Memoria) mDispositivo;
-                System.out.println("\t\t Memoria : " + mMemoria.getModelo() + " -> " + mUtils.texto_tamanho(mMemoria.getTamanho()));
+                Memoria eMemoria = (Memoria) mDispositivo;
+                System.out.println("\t\t Memoria : " + eMemoria.getModelo() + " -> " + mUtils.texto_tamanho(eMemoria.getTamanho()));
 
                 mTemMemoria = true;
-                mVLMemoria = new VLMemoria(mMemoria, MEMORIA_BLOCO);
+                mMemoria = eMemoria;
 
             } else if (mDispositivo instanceof SATA) {
 
-                SATA mSATA = (SATA) mDispositivo;
-                System.out.println("\t\t HD : " + mSATA.getModelo() + " -> " + mUtils.texto_tamanho(mSATA.getTamanho()));
+                SATA eSATA = (SATA) mDispositivo;
+                System.out.println("\t\t HD : " + eSATA.getModelo() + " -> " + mUtils.texto_tamanho(eSATA.getTamanho()));
 
                 mTemHD = true;
 
@@ -179,21 +221,21 @@ public class VLOS {
                 Impressora mImpressora = (Impressora) mDispositivo;
                 System.out.println("\t\t Impressora : " + mImpressora.getModelo());
 
-                mVLRecursos.adicionarRecurso(mImpressora.getModelo());
+                mRecursosDispositivos.add(mDispositivo);
 
             } else if (mDispositivo instanceof Scanner) {
 
                 Scanner mScanner = (Scanner) mDispositivo;
                 System.out.println("\t\t Scanner : " + mScanner.getModelo());
 
-                mVLRecursos.adicionarRecurso(mScanner.getModelo());
+                mRecursosDispositivos.add(mDispositivo);
 
             } else if (mDispositivo instanceof Modem) {
 
                 Modem mModem = (Modem) mDispositivo;
                 System.out.println("\t\t Modem : " + mModem.getModelo());
 
-                mVLRecursos.adicionarRecurso(mModem.getModelo());
+                mRecursosDispositivos.add(mDispositivo);
 
             }
             esperar();
@@ -213,34 +255,7 @@ public class VLOS {
         }
 
 
-        esperar();
-
     }
-
-
-    public void esperar() {
-
-        try {
-
-            Thread.sleep(800);
-        } catch (
-                InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-    public void temporizar() {
-        mCicloContagem += 1;
-
-        if (mCicloContagem >= mCicloMaximo) {
-            mTempoContagem += 1;
-            mCicloContagem = 0;
-        }
-    }
-
 
     public void despachar(ArrayList<ItemDespachante> mDespachantes) {
 
@@ -251,7 +266,7 @@ public class VLOS {
         // OBTEM DESPACHANTES DO TEMPO REQUERIDO
         for (ItemDespachante mItem : mDespachantes) {
             if (!mItem.isDespachado()) {
-                if (mItem.getInicializacao() == mTempoContagem) {
+                if (mItem.getInicializacao() == mTempo) {
                     mAdicionar.add(mItem);
                 }
             }
@@ -269,13 +284,21 @@ public class VLOS {
 
         if (mAdicionar.size() > 0) {
 
-            System.out.println("\t ---------------------------------------------------------------------------------------------------");
-            System.out.println("\t -->> VLOS ADICIONAR PROCESSO { TEMPO :: " + mTempoContagem + "s CICLO :: " + mCicloContagem + " }");
+            mVLProcessos.criarProcessoKernel(mTempo, mVLMemoria.alocarBlocosDeKernel(2 * mVLMemoria.getTamanhoBloco()), 2);
+
+            if (mDEBUG_DESPACHANTE) {
+                System.out.println("\t ---------------------------------------------------------------------------------------------------");
+                System.out.println("\t -->> VLOS ADICIONAR PROCESSO { TEMPO :: " + mTempo + "s CICLO :: " + mCicloContagem + " }");
+            }
 
             for (ItemDespachante mItem : mAdicionar) {
 
                 // EXISTE PROCESSO PARA SER ADICIONADO A FILA DE USUARIO
                 mItem.despachar();
+
+                if (mDEBUG_DESPACHANTE) {
+                    mDumper.dump_despachante(mItem);
+                }
 
                 // ALOCA RECURSOS PARA INICIAR O PROCESSO
 
@@ -283,77 +306,149 @@ public class VLOS {
                 MemoriaAlocada eMemoriaAlocada = mVLMemoria.alocarBlocosDeUsuario(mItem.getBlocos() * mVLMemoria.getTamanhoBloco());
 
 
-                Processo mProcessoCorrente = mVLProcessos.criarProcessoUsuario(mItem.getPrioridade(), eMemoriaAlocada, mItem.getTempoProcessador());
-                mProcessoCorrente.mostrar();
+                Processo mProcessoCorrente = mVLProcessos.criarProcessoUsuario(mTempo, mItem.getPrioridade(), eMemoriaAlocada, mItem.getTempoProcessador());
+                //mProcessoCorrente.mostrar();
+
+                if (mDEBUG_PROCESSO_CORRENTE) {
+                    mDumper.dump_processoCompleto(mTempo, mProcessoCorrente);
+                }
 
             }
 
-            System.out.println("\t ---------------------------------------------------------------------------------------------------");
+            if (mDEBUG_DESPACHANTE) {
+                System.out.println("\t ---------------------------------------------------------------------------------------------------");
+            }
 
+            if (mDEBUG_MEMORIA) {
+                mDumper.dump_memoria(mVLMemoria);
+            }
 
         }
 
 
     }
 
+    public void iniciar() {
+
+        if (mDEBUG_MEMORIA) {
+            mDumper.dump_memoria(mVLMemoria);
+        }
+
+
+        System.out.println("\t -->> Reservando 64 Blocos para KERNEL");
+
+        esperar();
+
+        mVLMemoria.reservarKernel(64 * mMEMORIA_BLOCO);
+        mVLMemoria.definirOffsets(0, 64);
+
+        if (mDEBUG_MEMORIA) {
+            mDumper.dump_memoria(mVLMemoria);
+        }
+
+
+        esperar();
+
+    }
 
     public void ociosa() {
 
         // REALIZA PROCEDIMENTOS DE ESCOLANAMENTO QUANDO A CPU ESTIVER OCIOSA
 
-        System.out.println("\t -->> CPU OCIOSA { TEMPO :: " + mTempoContagem + "s CICLO :: " + mCicloContagem + " } ");
+        System.out.println("\t -->> CPU OCIOSA { TEMPO :: " + mTempo + "s CICLO :: " + mCicloContagem + " } ");
 
-        if (mVLProcessos.temProcessoKernelEsperando()) {
+        if (mVLProcessos.temProcessoProntoKernel()) {
 
-            System.out.println("\t ---------------------------------------------------------------------------------------------------");
-            System.out.println("\t -->> KERNEL PROCESSAR");
-
-            System.out.println("\t Tem processos do Kernel prontos na fila de Tempo de Execucao Real");
+            if (mDEBUG_ESCALONADOR) {
+                System.out.println("\t ---------------------------------------------------------------------------------------------------");
+                System.out.println("\t -->> ESCALONADOR : PROCESSAR PROCESSOS DO KERNEL");
+                System.out.println("\t - Processos : " + mVLProcessos.getProcessosKernel().size());
+                System.out.println("\t - Prontos   : " + mVLProcessos.getProcessosKernel_Prontos().size());
+                System.out.println("\t - Concludos : " + mVLProcessos.getProcessosKernel_Conclucidos().size());
+            }
 
             Processo mEscalonado = mVLProcessos.escalonarProcessoKernel();
-            System.out.println("\t ---------------------------------------------------------------------------------------------------");
 
-            mDumper.dump_processos(mVLProcessos);
+            if (mEscalonado.getProcessado() == 0) {
+                mEscalonado.setTempoExecucaoInicio(mTempo);
+            }
 
-            System.out.println("\tEscalonando Processo de Kernel");
-            System.out.println("\t\t PID         = " + mEscalonado.getPID());
-            System.out.println("\t\t Prioridade  = " + mEscalonado.getPrioridade());
+            if (mDEBUG_ESCALONADOR) {
+                System.out.println("\t ---------------------------------------------------------------------------------------------------");
+            }
+
+            if (mDEBUG_PROCESSOS) {
+                mDumper.dump_processosCompleto(mTempo, mVLProcessos);
+            }
+
+            if (mDEBUG_ESCALONADOR) {
+                System.out.println("\tEscalonando Processo de Kernel");
+                System.out.println("\t\t PID         = " + mEscalonado.getPID());
+                System.out.println("\t\t Prioridade  = " + mEscalonado.getPrioridade());
+            }
 
             mEscalonado.mudarStatus(ProcessoStatus.EXECUTANDO);
-            mEscalonado.mostrar();
+
+            if (mDEBUG_PROCESSOS) {
+                mDumper.dump_processoCompleto(mTempo, mEscalonado);
+            }
+
             mCPU.setExecutando(true);
 
-            mDumper.dump_processos(mVLProcessos);
+            if (mDEBUG_PROCESSOS) {
+                mDumper.dump_processosCompleto(mTempo, mVLProcessos);
+            }
 
         } else {
 
-            if (mVLProcessos.temProcessoUsuarioEsperando()) {
+            if (mVLProcessos.temProcessoProntoUsuario()) {
 
-                System.out.println("\t ---------------------------------------------------------------------------------------------------");
-                System.out.println("\t -->> USUARIO ESCALONAR");
-
-                System.out.println("\t Tem processos do Usuario prontos na fila de Escalonamento  .... ");
+                if (mDEBUG_ESCALONADOR) {
+                    System.out.println("\t ---------------------------------------------------------------------------------------------------");
+                    System.out.println("\t -->> ESCALONADOR : PROCESSAR PROCESSOS DO USUARIO");
+                    System.out.println("\t - Processos : " + mVLProcessos.getProcessosUsuario().size());
+                    System.out.println("\t - Prontos   : " + mVLProcessos.getProcessosUsuario_Prontos().size());
+                    System.out.println("\t - Concludos : " + mVLProcessos.getProcessosUsuario_Conclucidos().size());
+                }
 
                 Processo mEscalonado = mVLProcessos.escalonarProcessoUsuario();
-                System.out.println("\t ---------------------------------------------------------------------------------------------------");
-
-                mDumper.dump_processos(mVLProcessos);
-
-                System.out.println("\tEscalonando Processo de Usuario");
-                System.out.println("\t\t PID         = " + mEscalonado.getPID());
-                System.out.println("\t\t Prioridade  = " + mEscalonado.getPrioridade());
 
                 if (mEscalonado.getProcessado() == 0) {
-                    System.out.println("\t\t Iniciar Processo");
-                } else {
-                    System.out.println("\t\t Continuar Processo");
+                    mEscalonado.setTempoExecucaoInicio(mTempo);
+                }
+
+                if (mDEBUG_ESCALONADOR) {
+                    System.out.println("\t ---------------------------------------------------------------------------------------------------");
+                }
+
+                if (mDEBUG_PROCESSOS) {
+                    mDumper.dump_processosCompleto(mTempo, mVLProcessos);
+                }
+
+                if (mDEBUG_ESCALONADOR) {
+                    System.out.println("\tEscalonando Processo de Usuario");
+                    System.out.println("\t\t PID         = " + mEscalonado.getPID());
+                    System.out.println("\t\t Prioridade  = " + mEscalonado.getPrioridade());
+
+                    if (mEscalonado.getProcessado() == 0) {
+                        System.out.println("\t\t Iniciar Processo");
+                    } else {
+                        System.out.println("\t\t Continuar Processo");
+                    }
                 }
 
                 mEscalonado.mudarStatus(ProcessoStatus.EXECUTANDO);
-                mEscalonado.mostrar();
+
+                if (mDEBUG_PROCESSO_CORRENTE) {
+                    mDumper.dump_processoCompleto(mTempo, mEscalonado);
+                }
+
                 mCPU.setExecutando(true);
 
-                mDumper.dump_processos(mVLProcessos);
+
+                if (mDEBUG_PROCESSOS) {
+                    mDumper.dump_processosCompleto(mTempo, mVLProcessos);
+                }
 
             }
         }
@@ -364,10 +459,12 @@ public class VLOS {
 
         // EXECUTA PARTE DO PROCESSO QUE ESTA NA CPU
 
-        System.out.println("\t -->> CPU EXECUTANDO { TEMPO :: " + mTempoContagem + "s CICLO :: " + mCicloContagem + " } -->> PID = " + mVLProcessos.getEscalonado().getPID());
+        System.out.println("\t -->> CPU EXECUTANDO { TEMPO :: " + mTempo + "s CICLO :: " + mCicloContagem + " } -->> PID = " + mVLProcessos.getEscalonado().getPID());
 
         esperar();
 
+
+        boolean mProcessoConcluiu = false;
 
         mQuantizando += 1;
         if (mQuantizando >= mQuantum) {
@@ -377,21 +474,33 @@ public class VLOS {
 
                 if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.KERNEL) {
 
-                    mVLProcessos.getEscalonado().aumentarProcessado();
-                    if (mVLProcessos.getEscalonado().getConcluido()) {
+                    mVLProcessos.getEscalonado().processar();
+                    mVLProcessos.getEscalonado().verificar();
+
+                    if (mVLProcessos.getEscalonado().isConcluido()) {
+
+                        mVLProcessos.getEscalonado().setTempoConclusao(mTempo);
+
                         System.out.println("\t -->> PROCESSO DE KERNEL CONCLUIDO : PID = " + mVLProcessos.getEscalonado().getPID());
 
                         mCPU.setExecutando(false);
                         mVLProcessos.retirarProcesso();
+                        mProcessoConcluiu = true;
                     }
 
                 } else if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.USUARIO) {
 
+                    mVLProcessos.getEscalonado().processar();
                     mVLProcessos.getEscalonado().mudarStatus(ProcessoStatus.PRONTO);
-                    mVLProcessos.getEscalonado().aumentarProcessado();
+                    mVLProcessos.getEscalonado().verificar();
 
-                    if (mVLProcessos.getEscalonado().getConcluido()) {
+                    if (mVLProcessos.getEscalonado().isConcluido()) {
+
+                        mVLProcessos.getEscalonado().setTempoConclusao(mTempo);
+
                         System.out.println("\t -->> PROCESSO DE USUARIO CONCLUIDO : PID = " + mVLProcessos.getEscalonado().getPID());
+                        mProcessoConcluiu = true;
+
                     }
 
 
@@ -406,12 +515,36 @@ public class VLOS {
 
         }
 
+        if (mProcessoConcluiu) {
+            if (mDEBUG_PROCESSOS) {
+                mDumper.dump_processosCompleto(mTempo, mVLProcessos);
+            }
+        }
 
-        //  mDumper.dump_recursos(mVLRecursos);
-        //   mDumper.dump_memoria(mVLMemoria);
-        //  mDumper.dump_processos(mVLProcessos);
+    }
 
 
+    public void esperar() {
+
+        if (mDILATADOR_TEMPORAL) {
+            try {
+                Thread.sleep(200);
+            } catch (
+                    InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public void temporizar() {
+        mCicloContagem += 1;
+
+        if (mCicloContagem >= mCicloMaximo) {
+            mTempo += 1;
+            mCicloContagem = 0;
+        }
     }
 
 }

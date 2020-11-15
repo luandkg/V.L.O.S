@@ -1,6 +1,8 @@
 package VLOS.Processo;
 
 import VLOS.CPU;
+import VLOS.Escalonadores.EscalonadorFIFO;
+import VLOS.Escalonadores.EscalonadorRobinRoundPrioritario;
 import VLOS.Memoria.MemoriaAlocada;
 
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class VLProcessos {
 
     private CPU mCPU;
     private int mPID_Executando;
+    private int mFila;
+
     private Processo mEscalonado;
     private boolean mTemEscalonado;
 
@@ -33,14 +37,16 @@ public class VLProcessos {
         mUsuario_Processos_03 = new ArrayList<Processo>();
 
         mPID_Executando = -1;
+        mFila = -1;
+
         mEscalonado = null;
         mTemEscalonado = false;
 
     }
 
-    public Processo criarProcessoKernel(MemoriaAlocada eMemoriaAlocada, int eTamanho) {
+    public Processo criarProcessoKernel(long mTempoCricao, MemoriaAlocada eMemoriaAlocada, int eTamanho) {
 
-        Processo mProcesso = new Processo(mPID, ProcessoTipo.KERNEL, 0, eTamanho, eMemoriaAlocada);
+        Processo mProcesso = new Processo(mPID, ProcessoTipo.KERNEL, 0, mTempoCricao, eTamanho, eMemoriaAlocada);
         mKernel_Processos.add(mProcesso);
 
         mPID += 1;
@@ -48,9 +54,9 @@ public class VLProcessos {
         return mProcesso;
     }
 
-    public Processo criarProcessoUsuario(int ePrioridade, MemoriaAlocada eMemoriaAlocada, int eTamanho) {
+    public Processo criarProcessoUsuario(long mTempoCricao, int ePrioridade, MemoriaAlocada eMemoriaAlocada, int eTamanho) {
 
-        Processo mProcesso = new Processo(mPID, ProcessoTipo.USUARIO, ePrioridade, eTamanho, eMemoriaAlocada);
+        Processo mProcesso = new Processo(mPID, ProcessoTipo.USUARIO, ePrioridade, mTempoCricao, eTamanho, eMemoriaAlocada);
 
         if (ePrioridade == 0) {
             mUsuario_Processos_01.add(mProcesso);
@@ -180,6 +186,28 @@ public class VLProcessos {
         return mKernel_Processos;
     }
 
+    public ArrayList<Processo> getProcessosKernel_Prontos() {
+        ArrayList<Processo> mKernel_Prontos = new ArrayList<>();
+        for (Processo eProcesso : mKernel_Processos) {
+            if (eProcesso.getStatus() == ProcessoStatus.PRONTO) {
+                mKernel_Prontos.add(eProcesso);
+            }
+        }
+        return mKernel_Prontos;
+    }
+
+    public ArrayList<Processo> getProcessosKernel_Conclucidos() {
+        ArrayList<Processo> mKernel_Concluido = new ArrayList<>();
+
+        for (Processo eProcesso : mKernel_Processos) {
+            if (eProcesso.getStatus() == ProcessoStatus.CONCLUIDO) {
+                mKernel_Concluido.add(eProcesso);
+            }
+        }
+
+        return mKernel_Concluido;
+    }
+
     public ArrayList<Processo> getProcessosUsuario() {
 
         ArrayList<Processo> mUsuarioTodos = new ArrayList<>();
@@ -188,6 +216,41 @@ public class VLProcessos {
         mUsuarioTodos.addAll(mUsuario_Processos_03);
 
         return mUsuarioTodos;
+    }
+
+    public ArrayList<Processo> getProcessosUsuario_Prontos() {
+
+        ArrayList<Processo> mUsuarioTodos = new ArrayList<>();
+        mUsuarioTodos.addAll(mUsuario_Processos_01);
+        mUsuarioTodos.addAll(mUsuario_Processos_02);
+        mUsuarioTodos.addAll(mUsuario_Processos_03);
+
+        ArrayList<Processo> mUsuario_Prontos = new ArrayList<>();
+        for (Processo eProcesso : mUsuarioTodos) {
+            if (eProcesso.getStatus() == ProcessoStatus.PRONTO) {
+                mUsuario_Prontos.add(eProcesso);
+            }
+        }
+        return mUsuario_Prontos;
+    }
+
+    public ArrayList<Processo> getProcessosUsuario_Conclucidos() {
+
+        ArrayList<Processo> mUsuarioTodos = new ArrayList<>();
+        mUsuarioTodos.addAll(mUsuario_Processos_01);
+        mUsuarioTodos.addAll(mUsuario_Processos_02);
+        mUsuarioTodos.addAll(mUsuario_Processos_03);
+
+
+        ArrayList<Processo> mUsuario_Concluido = new ArrayList<>();
+
+        for (Processo eProcesso : mUsuarioTodos) {
+            if (eProcesso.getStatus() == ProcessoStatus.CONCLUIDO) {
+                mUsuario_Concluido.add(eProcesso);
+            }
+        }
+
+        return mUsuario_Concluido;
     }
 
 
@@ -204,13 +267,13 @@ public class VLProcessos {
     }
 
 
-    public boolean temProcessoKernelEsperando() {
+    public boolean temProcessoProntoKernel() {
 
         boolean tem = false;
 
         for (Processo mProcesso : mKernel_Processos) {
 
-            if (mProcesso.getConcluido() == false) {
+            if (mProcesso.isPronto()) {
                 tem = true;
                 break;
             }
@@ -222,13 +285,13 @@ public class VLProcessos {
     }
 
 
-    public boolean temProcessoUsuarioEsperando() {
+    public boolean temProcessoProntoUsuario() {
 
         boolean tem = false;
 
         for (Processo mProcesso : mUsuario_Processos_01) {
 
-            if (mProcesso.getConcluido() == false) {
+            if (mProcesso.isPronto()) {
                 tem = true;
                 break;
             }
@@ -239,7 +302,7 @@ public class VLProcessos {
 
             for (Processo mProcesso : mUsuario_Processos_02) {
 
-                if (mProcesso.getConcluido() == false) {
+                if (mProcesso.isPronto()) {
                     tem = true;
                     break;
                 }
@@ -252,7 +315,7 @@ public class VLProcessos {
 
             for (Processo mProcesso : mUsuario_Processos_03) {
 
-                if (mProcesso.getConcluido() == false) {
+                if (mProcesso.isPronto()) {
                     tem = true;
                     break;
                 }
@@ -280,6 +343,8 @@ public class VLProcessos {
 
             mTemEscalonado = true;
             mEscalonado = mEscalonadorFIFO.getEscalonado();
+            mPID_Executando = mEscalonado.getPID();
+            mFila = -1;
 
         }
 
@@ -291,19 +356,28 @@ public class VLProcessos {
         mTemEscalonado = false;
 
         EscalonadorRobinRoundPrioritario mERRP = new EscalonadorRobinRoundPrioritario();
-        mERRP.escalone(mEscalonado,mUsuario_Processos_01, mUsuario_Processos_02, mUsuario_Processos_03);
+
+        int mPIDAnterior = -1;
+
+        if (mEscalonado != null) {
+            mPIDAnterior = mEscalonado.getPID();
+            //  System.out.println("\t - Processo Anterior :: PID " + mPIDAnterior);
+            //  System.out.println("\t - Processo Anterior :: FILA " + mFila);
+
+        }
+
+
+        mERRP.escalone(mFila, mPIDAnterior, mUsuario_Processos_01, mUsuario_Processos_02, mUsuario_Processos_03);
 
         if (mERRP.temProcesso()) {
 
             mTemEscalonado = true;
             mEscalonado = mERRP.getEscalonado();
-
-        }
-
-
-        if (mTemEscalonado) {
+            mFila = mERRP.getFila();
             mPID_Executando = mEscalonado.getPID();
+
         }
+
 
         return mEscalonado;
     }

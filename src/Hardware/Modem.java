@@ -1,6 +1,6 @@
 package Hardware;
 
-public class Modem extends Dispositivo  {
+public class Modem implements Dispositivo  {
 
     private String mModelo;
 
