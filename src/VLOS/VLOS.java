@@ -430,7 +430,7 @@ public class VLOS {
 
         //  mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachantes);
         //mTeste_Alpha.testeProcessosEmTempos(mDespachadorDeProcessos, mDespachadorDeOperacoes);
-
+        mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachadorDeProcessos, mDespachadorDeOperacoes);
 
         System.out.println("");
         System.out.println("DESPACHAR PROCESSOS");

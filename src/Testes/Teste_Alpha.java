@@ -34,9 +34,7 @@ public class Teste_Alpha {
 
         mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Oi.txt", 2);
         mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Nomes.txt", 2);
-
         mDespachadorDeOperacoes.adicionarOperacao(3, 0, "Alunos.txt", 3);
-
         mDespachadorDeOperacoes.adicionarOperacao(3, 1, "Nomes.txt", 0);
 
     }
@@ -76,38 +74,44 @@ public class Teste_Alpha {
     }
 
 
-    public void testeProcessosSimultaneosMultiplasFilasPrioritarias(ArrayList<DespachanteProcesso> mDespachantes) {
+    public void testeProcessosSimultaneosMultiplasFilasPrioritarias(DespachadorDeProcessos mDespachadorDeProcessos,DespachadorDeOperacoes mDespachadorDeOperacoes) {
 
-        mDespachantes.clear();
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 1, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 5, 1, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 1, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 1, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 7, 1, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 2, 1, 1);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 4, 1, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 3, 1, 7);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 5, 0, 5);
+        mDespachadorDeProcessos.getProcessos().clear();
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 1, 3, 1, 2);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 1, 5, 1, 2);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 5, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 3, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 7, 2, 3);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 4, 2, 5);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 3, 0, 7);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 5, 0, 5);
 
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 1, 3, 4);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 1, 3, 4);
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 4, 2, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 5, 1, 8);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 5, 1, 8);
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 3, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 1, 3, 9);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 5, 3, 5);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 3, 1, 3, 9);
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 1, 6, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 1, 5, 10);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 5, 3, 1, 12);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 1, 6, 5);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 5, 1, 5, 10);
 
-        adicionarProcessoUsuarioEmFila(mDespachantes, 6, 3, 2, 12);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 7, 3, 8, 50);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 9, 2, 4, 4);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 10, 6, 5, 5);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 7, 3, 8, 50);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 9, 2, 4, 4);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 10, 6, 5, 5);
+
+        mDespachadorDeOperacoes.setBlocos(30);
+        mDespachadorDeOperacoes.setSegmentosOcupados(10);
+
+        mDespachadorDeOperacoes.getItens().clear();
+        mDespachadorDeOperacoes.getOperacoes().clear();
+
+        mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Oi.txt", 2);
+        mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Nomes.txt", 2);
+        mDespachadorDeOperacoes.adicionarOperacao(3, 0, "Alunos.txt", 3);
+        mDespachadorDeOperacoes.adicionarOperacao(3, 1, "Nomes.txt", 0);
+
 
     }
 

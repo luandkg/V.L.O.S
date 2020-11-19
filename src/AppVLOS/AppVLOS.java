@@ -30,7 +30,7 @@ public class AppVLOS {
 
 
         // ADICIONANDO HARDWARE A MAQUINA
-        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 + 512) * 1024 * 1024));
+        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 ) * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("ST2000DM008", 500 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("WD20PURX", 200 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new Impressora("Ink Tank 416 Z4B55A HP"));
@@ -43,11 +43,14 @@ public class AppVLOS {
         // INSTALANDO SISTEMA OPERACIONAL VLOS NA MAQUINA i368
         VLOS mVLOS = new VLOS(mMaquina);
 
-        // LIGANDO A MAQUINA i368
-      //  mVLOS.ligar();
 
 
+        // LIGANDO A MAQUINA i368 - MODO TERMINAL
 
+        //  mVLOS.ligar();
+
+
+        // LIGANDO A MAQUINA i368 - MODO INTERFACE GRAFICA
         Windows mWindows = new Windows("VLOS", 800, 1000,new CenaVLOS(mVLOS, 800, 1000));
         Thread mThread = new Thread(mWindows);
         mThread.start();
