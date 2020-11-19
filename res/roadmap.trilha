@@ -23,6 +23,8 @@
 2020 11 11  -->>  Gerenciador de Processos - VLProcessos
 2020 11 11  -->>  Processo
 2020 11 11  -->>  CPU
+2020 11 11  -->>  Contexto de Hardware
+2020 11 11  -->>  Contexto de Software
 2020 11 11  -->>  Interface de Escalonador
 2020 11 11  -->>  Escalonador de Processos de Usuario
 2020 11 11  -->>  Organização de Processos de Kernel
@@ -31,6 +33,8 @@
 
 2020 11 13  -->>  Gerenciador de Recursos - VLRecursos
 2020 11 13  -->>  Sistema de Testes
+2020 11 13  -->>  Troca de Contexto - Software
+2020 11 13  -->>  Troca de Contexto - Hardware
 
 2020 11 14  -->>  Ordenacação das Filas de Processos de Usuário
 2020 11 14  -->>  Refatoramento do Escalonador Fifo
@@ -54,4 +58,4 @@
 2020 11 18  -->>  Gerenciador de Sistemas de Arquivos VLVFS
 2020 11 18  -->>  Interface Gráfica - Martins FS
 
-
+2020 11 19  -->>  Correção de bugs

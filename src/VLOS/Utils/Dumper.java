@@ -1,4 +1,4 @@
-package VLOS;
+package VLOS.Utils;
 
 import VLOS.Despachante.DespachanteProcesso;
 import VLOS.Memoria.VLMemoria;
@@ -8,6 +8,7 @@ import VLOS.Processo.VLProcessos;
 import VLOS.Recurso.Recurso;
 import VLOS.Recurso.VLRecursos;
 import VLOS.Utils.Utils;
+import VLOS.VLOS;
 
 public class Dumper {
 

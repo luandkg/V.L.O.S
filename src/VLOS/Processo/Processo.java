@@ -1,6 +1,7 @@
 package VLOS.Processo;
 
 import VLOS.Arquivador.VLVFS;
+import VLOS.CPU;
 import VLOS.Despachante.DespachanteOperacao;
 import VLOS.Memoria.MemoriaAlocada;
 
@@ -28,6 +29,9 @@ public class Processo {
 
     private ArrayList<DespachanteOperacao> mOperacoes;
 
+    private ContextoDeHardware mContextoDeHardware;
+    private ContextoDeSoftware mContextoDeSoftware;
+
     public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, long eTempoCriacao, int eTamanho, MemoriaAlocada eMemoriaAlocada) {
 
         mPID = ePID;
@@ -46,6 +50,9 @@ public class Processo {
         mProcessoStatus = ProcessoStatus.PRONTO;
 
         mOperacoes = new ArrayList<DespachanteOperacao>();
+
+        mContextoDeHardware = new ContextoDeHardware();
+        mContextoDeSoftware = new ContextoDeSoftware(mPID);
 
     }
 
@@ -126,11 +133,15 @@ public class Processo {
         return mProcessado;
     }
 
-    public void processar(VLVFS mVLVFS) {
 
-        if (mProcessado < mTamanho) {
-            mProcessado += 1;
-        }
+    public void processar(CPU mCPU, VLVFS mVLVFS) {
+
+
+        // TROCA DE CONTEXTO -> ENVIAR PARA CPU CONTEXTO DE HARDWARE
+        // TROCA DE CONTEXTO -> ENVIAR PARA CPU CONTEXTO DE SOFTWARE
+
+        mContextoDeSoftware.enviar(mCPU);
+        mContextoDeHardware.enviar(mCPU);
 
         for (DespachanteOperacao eOperacao : mOperacoes) {
             if (!eOperacao.isRealizado()) {
@@ -185,9 +196,21 @@ public class Processo {
 
         }
 
+
+        if (mProcessado < mTamanho) {
+            mProcessado += 1;
+        }
+
         if (mProcessado >= mTamanho) {
             mProcessoStatus = ProcessoStatus.CONCLUIDO;
         }
+
+        // TROCA DE CONTEXTO -> RECEBER DA CPU CONTEXTO DE HARDWARE
+        // TROCA DE CONTEXTO -> RECEBER DA CPU CONTEXTO DE SOFTWARE
+
+        mContextoDeSoftware.receber(mCPU);
+        mContextoDeHardware.receber(mCPU);
+
 
     }
 

@@ -12,6 +12,7 @@ import VLOS.Processo.ProcessoTipo;
 import VLOS.Processo.VLProcessos;
 import VLOS.Recurso.VLRecursos;
 import VLOS.Utils.BlocoSlice;
+import VLOS.Utils.Dumper;
 import VLOS.Utils.Utils;
 
 import java.util.ArrayList;
@@ -617,7 +618,7 @@ public class VLOS {
 
                 if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.KERNEL) {
 
-                    mVLProcessos.getEscalonado().processar(mVLVFS);
+                    mVLProcessos.getEscalonado().processar(mCPU,mVLVFS);
                     mVLProcessos.getEscalonado().verificar();
 
                     if (mVLProcessos.getEscalonado().isConcluido()) {
@@ -633,7 +634,7 @@ public class VLOS {
 
                 } else if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.USUARIO) {
 
-                    mVLProcessos.getEscalonado().processar(mVLVFS);
+                    mVLProcessos.getEscalonado().processar(mCPU,mVLVFS);
                     mVLProcessos.getEscalonado().mudarStatus(ProcessoStatus.PRONTO);
                     mVLProcessos.getEscalonado().verificar();
 
