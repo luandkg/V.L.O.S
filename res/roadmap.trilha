@@ -18,7 +18,7 @@
 2020 11 10  -->>  Processo de Usuario
 2020 11 10  -->>  Status de Processo
 2020 11 10  -->>  Tipo de Processo
-
+2020 11 10  -->>  Interface Gráfica
 
 2020 11 11  -->>  Gerenciador de Processos - VLProcessos
 2020 11 11  -->>  Processo
@@ -26,6 +26,8 @@
 2020 11 11  -->>  Interface de Escalonador
 2020 11 11  -->>  Escalonador de Processos de Usuario
 2020 11 11  -->>  Organização de Processos de Kernel
+2020 11 11  -->>  Interface Gráfica - Processos
+2020 11 11  -->>  Interface Gráfica - Memoria
 
 2020 11 13  -->>  Gerenciador de Recursos - VLRecursos
 2020 11 13  -->>  Sistema de Testes
@@ -38,3 +40,18 @@
 2020 11 15  -->>  Tempo de Conclusao Processo
 2020 11 15  -->>  Tempo de Espera Processo
 2020 11 15  -->>  Implementação Sistema de Debug
+
+2020 11 16  -->>  Ultimos bugs do Escalonador
+
+2020 11 17  -->>  Sistema de Arquivos
+2020 11 17  -->>  Alocacao de Blocos no Sistema de Arquivos
+2020 11 17  -->>  Operação Criar Arquivo
+2020 11 17  -->>  Operação Existe Arquivo
+2020 11 17  -->>  Operação Remover Arquivo
+
+2020 11 18  -->>  Integração SATA com Sistema de Arquivos
+2020 11 18  -->>  Sistema de Arquivos Virtuais
+2020 11 18  -->>  Gerenciador de Sistemas de Arquivos VLVFS
+2020 11 18  -->>  Interface Gráfica - Martins FS
+
+

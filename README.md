@@ -27,6 +27,8 @@
         - Inicializador de Perifericos
         - Gerenciador de Processos
         - Gerenciador de Memoria
-        - Despachador
         - Gerenciador de Recursos
+        - Escalonador Fifo
+        - Escalonador Round Robin Prioritario
+        - Despachador
      

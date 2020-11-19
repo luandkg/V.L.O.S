@@ -1,6 +1,6 @@
 package VLOS.Despachante;
 
-public class ItemDespachante {
+public class DespachanteProcesso {
 
     private int mInicializacao;
     private int mPrioridade;
@@ -13,7 +13,7 @@ public class ItemDespachante {
 
     private boolean misDespachado;
 
-    public ItemDespachante() {
+    public DespachanteProcesso() {
         misDespachado = false;
     }
 

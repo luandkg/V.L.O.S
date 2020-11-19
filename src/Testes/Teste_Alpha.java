@@ -1,6 +1,8 @@
 package Testes;
 
-import VLOS.Despachante.ItemDespachante;
+import VLOS.Despachante.DespachadorDeOperacoes;
+import VLOS.Despachante.DespachadorDeProcessos;
+import VLOS.Despachante.DespachanteProcesso;
 
 import java.util.ArrayList;
 
@@ -16,18 +18,30 @@ public class Teste_Alpha {
     // testeProcessosSimultaneosMultiplasFilas          ->  Cria Processos Simultaneos em Tempos diferentes e em Multiplas Filas
 
 
-    public void testeProcessosEmTempos(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosEmTempos(DespachadorDeProcessos mDespachadorDeProcessos, DespachadorDeOperacoes mDespachadorDeOperacoes) {
 
-        mDespachantes.clear();
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 0, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 0, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 2, 0, 1);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 4, 0, 5);
+        mDespachadorDeProcessos.getProcessos().clear();
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 1, 3, 0, 2);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 2, 5, 0, 3);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 3, 2, 0, 1);
+        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 4, 4, 0, 5);
 
+        mDespachadorDeOperacoes.setBlocos(30);
+        mDespachadorDeOperacoes.setSegmentosOcupados(10);
+
+        mDespachadorDeOperacoes.getItens().clear();
+        mDespachadorDeOperacoes.getOperacoes().clear();
+
+        mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Oi.txt", 2);
+        mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Nomes.txt", 2);
+
+        mDespachadorDeOperacoes.adicionarOperacao(3, 0, "Alunos.txt", 3);
+
+        mDespachadorDeOperacoes.adicionarOperacao(3, 1, "Nomes.txt", 0);
 
     }
 
-    public void testeProcessosSimultaneosNoMesmoTempo(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosSimultaneosNoMesmoTempo(ArrayList<DespachanteProcesso> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 0, 2);
@@ -44,7 +58,7 @@ public class Teste_Alpha {
 
     }
 
-    public void testeProcessosSimultaneosEmTemposDiferentes(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosSimultaneosEmTemposDiferentes(ArrayList<DespachanteProcesso> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 0, 2);
@@ -62,19 +76,19 @@ public class Teste_Alpha {
     }
 
 
-    public void testeProcessosSimultaneosMultiplasFilasPrioritarias(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosSimultaneosMultiplasFilasPrioritarias(ArrayList<DespachanteProcesso> mDespachantes) {
 
         mDespachantes.clear();
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 0, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 5, 0, 2);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 0, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 0, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 0, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 7, 0, 3);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 2, 0, 1);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 4, 0, 5);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 3, 0, 7);
-        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 1, 0, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 1, 2);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 1, 5, 1, 2);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 5, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 2, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 2, 7, 1, 3);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 3, 2, 1, 1);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 4, 1, 5);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 3, 1, 7);
+        adicionarProcessoUsuarioEmFila(mDespachantes, 4, 5, 0, 5);
 
 
         adicionarProcessoUsuarioEmFila(mDespachantes, 2, 3, 1, 2);
@@ -97,7 +111,7 @@ public class Teste_Alpha {
 
     }
 
-    public void testeProcessosPrioritariosNoMesmoTempo(ArrayList<ItemDespachante> mDespachantes) {
+    public void testeProcessosPrioritariosNoMesmoTempo(ArrayList<DespachanteProcesso> mDespachantes) {
 
         mDespachantes.clear();
         adicionarProcessoUsuarioEmFila(mDespachantes, 1, 3, 5, 2);
@@ -108,9 +122,9 @@ public class Teste_Alpha {
 
     }
 
-    private void adicionarProcessoUsuarioEmFila(ArrayList<ItemDespachante> mDespachantes, int eTempo, int eTamanho, int ePrioridade, int eBlocos) {
+    private void adicionarProcessoUsuarioEmFila(ArrayList<DespachanteProcesso> mDespachantes, int eTempo, int eTamanho, int ePrioridade, int eBlocos) {
 
-        ItemDespachante eItem = new ItemDespachante();
+        DespachanteProcesso eItem = new DespachanteProcesso();
         eItem.setInicializacao(eTempo);
         eItem.setTempoProcessador(eTamanho);
         eItem.setPrioridade(ePrioridade);

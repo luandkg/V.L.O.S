@@ -27,4 +27,10 @@ public class Memoria implements Dispositivo {
     public String getTipo() {
         return "MEMORY";
     }
+
+    @Override
+    public boolean mesmoTipo(String eTipo) {
+        return eTipo.contentEquals("MEMORY");
+    }
+
 }

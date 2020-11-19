@@ -6,10 +6,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ArquivoDespachante {
+public class DespachadorDeProcessos {
 
+    private ArrayList<DespachanteProcesso> mProcessos;
 
-    public static ArrayList<ItemDespachante> carregar(String eArquivo) {
+    public DespachadorDeProcessos() {
+
+        mProcessos = new ArrayList<DespachanteProcesso>();
+
+    }
+
+    public ArrayList<DespachanteProcesso> getProcessos() {
+        return mProcessos;
+    }
+
+    public static DespachadorDeProcessos carregar(String eArquivo) {
 
         String eConteudo = Ler(eArquivo);
 
@@ -17,15 +28,15 @@ public class ArquivoDespachante {
         // System.out.println(eConteudo);
         //  System.out.println("---------------------------------------------");
 
-        ArrayList<ItemDespachante> mLista = new ArrayList<ItemDespachante>();
+        DespachadorDeProcessos mDespachadorDeProcessos = new DespachadorDeProcessos();
 
         int i = 0;
         int o = eConteudo.length();
 
         String mPegando = "";
-        ItemDespachante mNovo = new ItemDespachante();
+        DespachanteProcesso mNovo = new DespachanteProcesso();
 
-        int e = 0;
+        int eCampoID = 0;
 
         while (i < o) {
             String c = String.valueOf(eConteudo.charAt(i));
@@ -34,33 +45,33 @@ public class ArquivoDespachante {
 
             } else if (c.contentEquals(",")) {
 
-                if (e == 0) {
+                if (eCampoID == 0) {
                     mNovo.setInicializacao(Integer.parseInt(mPegando));
-                } else if (e == 1) {
+                } else if (eCampoID == 1) {
                     mNovo.setPrioridade(Integer.parseInt(mPegando));
-                } else if (e == 2) {
+                } else if (eCampoID == 2) {
                     mNovo.setTempoProcessador(Integer.parseInt(mPegando));
-                } else if (e == 3) {
+                } else if (eCampoID == 3) {
                     mNovo.setBlocos(Integer.parseInt(mPegando));
-                } else if (e == 4) {
+                } else if (eCampoID == 4) {
                     mNovo.setCodigoImpressora(Integer.parseInt(mPegando));
-                } else if (e == 5) {
+                } else if (eCampoID == 5) {
                     mNovo.setCodigoScanner(Integer.parseInt(mPegando));
-                } else if (e == 6) {
+                } else if (eCampoID == 6) {
                     mNovo.setCodigoModem(Integer.parseInt(mPegando));
-                } else if (e == 7) {
+                } else if (eCampoID == 7) {
                     mNovo.setCodigoDisco(Integer.parseInt(mPegando));
 
                 }
 
-                e += 1;
+                eCampoID += 1;
                 mPegando = "";
             } else if (c.contentEquals("\n")) {
 
-                e = 0;
+                eCampoID = 0;
                 mPegando = "";
-                mLista.add(mNovo);
-                mNovo = new ItemDespachante();
+                mDespachadorDeProcessos.getProcessos().add(mNovo);
+                mNovo = new DespachanteProcesso();
 
             } else if (c.contentEquals("\t")) {
             } else {
@@ -70,12 +81,12 @@ public class ArquivoDespachante {
             i += 1;
         }
 
-        if (e > 0) {
-            mLista.add(mNovo);
+        if (eCampoID > 0) {
+            mDespachadorDeProcessos.getProcessos().add(mNovo);
         }
 
 
-        return mLista;
+        return mDespachadorDeProcessos;
     }
 
     private static String Ler(String eArquivo) {

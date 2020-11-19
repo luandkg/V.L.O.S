@@ -1,4 +1,6 @@
-package VLOS;
+package VLOS.Utils;
+
+import VLOS.VLOS;
 
 import java.text.DecimalFormat;
 

@@ -1,6 +1,7 @@
 package AppVLOS;
 
 import Hardware.*;
+import UI.Windows;
 import VLOS.VLOS;
 import VLUtils.OARoad;
 
@@ -43,7 +44,13 @@ public class AppVLOS {
         VLOS mVLOS = new VLOS(mMaquina);
 
         // LIGANDO A MAQUINA i368
-        mVLOS.ligar();
+      //  mVLOS.ligar();
+
+
+
+        Windows mWindows = new Windows("VLOS", 800, 1000,new CenaVLOS(mVLOS, 800, 1000));
+        Thread mThread = new Thread(mWindows);
+        mThread.start();
 
 
     }

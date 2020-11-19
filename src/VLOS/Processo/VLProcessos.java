@@ -58,9 +58,11 @@ public class VLProcessos {
 
         Processo mProcesso = new Processo(mPID, ProcessoTipo.USUARIO, ePrioridade, mTempoCricao, eTamanho, eMemoriaAlocada);
 
-        if (ePrioridade == 0) {
-            mUsuario_Processos_01.add(mProcesso);
+        if (ePrioridade <= 0) {
+            throw new IllegalArgumentException("A Prioridade de um processo de usuario deve ser maior que 0 !");
         } else if (ePrioridade == 1) {
+            mUsuario_Processos_02.add(mProcesso);
+        } else if (ePrioridade == 2) {
             mUsuario_Processos_02.add(mProcesso);
         } else {
             mUsuario_Processos_03.add(mProcesso);

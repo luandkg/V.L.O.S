@@ -7,4 +7,5 @@ public interface Dispositivo {
 
     String getTipo();
 
+    boolean mesmoTipo(String eTipo);
 }

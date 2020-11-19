@@ -20,4 +20,9 @@ public class Scanner implements Dispositivo  {
         return "SCANNER";
     }
 
+    @Override
+    public boolean mesmoTipo(String eTipo) {
+        return eTipo.contentEquals("SCANNER");
+    }
+
 }

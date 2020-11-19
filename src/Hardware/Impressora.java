@@ -20,4 +20,10 @@ public class Impressora implements Dispositivo  {
         return "PRINTER";
     }
 
+    @Override
+    public boolean mesmoTipo(String eTipo) {
+        return eTipo.contentEquals("PRINTER");
+    }
+
+
 }

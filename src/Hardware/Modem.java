@@ -20,4 +20,9 @@ public class Modem implements Dispositivo  {
         return "MODEM";
     }
 
+    @Override
+    public boolean mesmoTipo(String eTipo) {
+        return eTipo.contentEquals("MODEM");
+    }
+
 }
