@@ -23,7 +23,7 @@ public abstract class Cena {
 
 	// Metodos Importantes
 
-	public abstract void iniciar();
+	public abstract void iniciar(Windows eWindows);
 
 	public abstract void update(double dt);
 

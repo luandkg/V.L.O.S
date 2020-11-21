@@ -31,6 +31,8 @@ public class VLOS {
 
     private boolean mTemMemoria;
     private boolean mTemHD;
+    private boolean mTemProcessador;
+    private boolean mTudoOK;
 
     private CPU mCPU;
     private Memoria mMemoria;
@@ -81,6 +83,9 @@ public class VLOS {
 
         mTemMemoria = false;
         mTemHD = false;
+        mTemProcessador = false;
+        mTudoOK = false;
+
         mLigado = false;
 
         mTeste_Alpha = new Teste_Alpha();
@@ -118,6 +123,19 @@ public class VLOS {
         return mEtapa;
     }
 
+    private void carregar_Despachadores() {
+
+        // ORGANIZADOR DE PROCESSOS PARA DESPACHAR EM TEMPO ADEQUADO
+        mDespachadorDeProcessos = DespachadorDeProcessos.carregar("res/proccesses.txt");
+        mDespachadorDeOperacoes = DespachadorDeOperacoes.carregar("res/files.txt");
+
+        //  mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachantes);
+        //mTeste_Alpha.testeProcessosEmTempos(mDespachadorDeProcessos, mDespachadorDeOperacoes);
+        mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachadorDeProcessos, mDespachadorDeOperacoes);
+
+
+    }
+
     public void ligar() {
 
         mEtapa = Etapa.LIGANDO;
@@ -135,7 +153,7 @@ public class VLOS {
 
         esperar();
 
-        if (mTemMemoria && mTemHD) {
+        if (mTudoOK) {
 
             // INICIAR VLOS
             iniciar();
@@ -187,13 +205,15 @@ public class VLOS {
 
         esperar();
 
-        if (mTemMemoria && mTemHD) {
+        if (mTudoOK) {
 
             // INICIAR VLOS
             iniciar();
 
             //  LOOP NUCLEO DO SISTEMA OPERACIONAL
             mEtapa = Etapa.EXECUTANDO;
+        }else{
+            desligar();
         }
 
     }
@@ -241,15 +261,36 @@ public class VLOS {
 
         mEtapa = Etapa.DETECTANDO_HARDWARE;
 
+        mCPU = new CPU();
+        mTemMemoria = false;
+        mTemHD = false;
+        mTemProcessador = false;
+        mTudoOK = false;
+
+        boolean temIncompativel = false;
+
         System.out.println("\t-----------------------------------------------------");
 
         System.out.println("\t DETECCAO DE HARDWARE");
-        System.out.println("\t\t Processador : " + mMaquina.getProcessador().getProcessador() + " -> " + mUtils.texto_nucleo(mMaquina.getProcessador().getNucleos()));
+        System.out.println("\t\t Arquitetura : " + mMaquina.getArquitetura().toString());
+        System.out.println("\t\t Tipo de Processamento : " + mMaquina.getTipoDeProcessador().toString());
 
-        mCPU = new CPU();
+        for (Processador eProcessador : mMaquina.getProcessadores()) {
 
-        mTemMemoria = false;
-        mTemHD = false;
+            if (eProcessador.getArquitetura() == mMaquina.getArquitetura()) {
+                System.out.println("\t\t Processador : " + eProcessador.getProcessador() + " -- " + eProcessador.getArquitetura() + " -> " + mUtils.texto_nucleo(eProcessador.getNucleos()) + " -->> OK ");
+            } else {
+                System.out.println("\t\t Processador : " + eProcessador.getProcessador() + " -- " + eProcessador.getArquitetura() + " -> " + mUtils.texto_nucleo(eProcessador.getNucleos()) + " -->> PROCESSADOR INCOMPATIVEL ");
+                temIncompativel = true;
+            }
+
+        }
+
+        if (mMaquina.getTipoDeProcessador() == TipoDeProcessador.MONOPROCESSADOR) {
+            mTemProcessador = true;
+        } else if (mMaquina.getTipoDeProcessador() == TipoDeProcessador.MULTIPROCESSADOR) {
+            mTemProcessador = true;
+        }
 
 
         for (Dispositivo mDispositivo : mMaquina.getDispositivos()) {
@@ -300,6 +341,23 @@ public class VLOS {
 
         System.out.println("");
 
+        boolean processadorOk = false;
+
+        if (!mTemProcessador) {
+            System.out.println("\t VLOS : Nao pode iniciar -->> NAO TEM PROCESSADOR !");
+        } else {
+            if (mMaquina.getProcessadores().size() == 1) {
+                processadorOk = true;
+            } else if (mMaquina.getProcessadores().size() > 1) {
+                processadorOk = true;
+                System.out.println("\t VLOS : -->> SO UM PROCESSADOR SERA UTILIZADO !");
+            }
+            if (temIncompativel) {
+                processadorOk = false;
+                System.out.println("\t VLOS : Nao pode iniciar -->> PROCESSADOR INCOMPATIVEL INSTALADO !");
+            }
+        }
+
         if (!mTemMemoria) {
             System.out.println("\t VLOS : Nao pode iniciar -->> NAO TEM MEMORIA !");
         }
@@ -308,6 +366,9 @@ public class VLOS {
             System.out.println("\t VLOS : Nao pode iniciar -->> NAO TEM HD !");
         }
 
+        if (mTemMemoria && mTemHD && processadorOk) {
+            mTudoOK = true;
+        }
 
     }
 
@@ -424,13 +485,7 @@ public class VLOS {
         mVLVFS = new VLVFS();
 
 
-        // ORGANIZADOR DE PROCESSOS PARA DESPACHAR EM TEMPO ADEQUADO
-        mDespachadorDeProcessos = DespachadorDeProcessos.carregar("res/proccesses.txt");
-        mDespachadorDeOperacoes = DespachadorDeOperacoes.carregar("res/files.txt");
-
-        //  mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachantes);
-        //mTeste_Alpha.testeProcessosEmTempos(mDespachadorDeProcessos, mDespachadorDeOperacoes);
-        mTeste_Alpha.testeProcessosSimultaneosMultiplasFilasPrioritarias(mDespachadorDeProcessos, mDespachadorDeOperacoes);
+        carregar_Despachadores();
 
         System.out.println("");
         System.out.println("DESPACHAR PROCESSOS");
@@ -454,8 +509,6 @@ public class VLOS {
                 System.out.println("\t - Operacao :: PID = " + eItem.getPID() + "    Tipo = REMOVER   Nome = " + eItem.getNomeArquivo() + " ");
             }
         }
-
-
 
 
         int mDiscos = 0;
@@ -618,7 +671,7 @@ public class VLOS {
 
                 if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.KERNEL) {
 
-                    mVLProcessos.getEscalonado().processar(mCPU,mVLVFS);
+                    mVLProcessos.getEscalonado().processar(mCPU, mVLVFS);
                     mVLProcessos.getEscalonado().verificar();
 
                     if (mVLProcessos.getEscalonado().isConcluido()) {
@@ -634,7 +687,7 @@ public class VLOS {
 
                 } else if (mVLProcessos.getEscalonado().getTipo() == ProcessoTipo.USUARIO) {
 
-                    mVLProcessos.getEscalonado().processar(mCPU,mVLVFS);
+                    mVLProcessos.getEscalonado().processar(mCPU, mVLVFS);
                     mVLProcessos.getEscalonado().mudarStatus(ProcessoStatus.PRONTO);
                     mVLProcessos.getEscalonado().verificar();
 

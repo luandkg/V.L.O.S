@@ -3,6 +3,7 @@ package AppVLOS;
 import UI.Cena;
 import UI.Renderizador;
 import UI.Escritor;
+import UI.Windows;
 import VLOS.Arquivador.BlocoFS;
 import VLOS.Arquivador.BlocoStatus;
 import VLOS.Processo.Processo;
@@ -36,21 +37,29 @@ public class CenaVLOS extends Cena {
         TextoSubPequeno = new Escritor(12, Color.BLACK);
 
         mVLOS = eATLOS;
-         mVLS_BLOCOS_LINHA = 5;
+        mVLS_BLOCOS_LINHA = 5;
 
 
     }
 
 
     @Override
-    public void iniciar() {
+    public void iniciar(Windows eWindows) {
+
         mVLOS.ligarApenas();
+
+        if (!mVLOS.estaLigado()) {
+            eWindows.encerrar();
+        }
+
     }
 
     @Override
     public void update(double dt) {
 
-        mVLOS.executarCiclo();
+        if (mVLOS.estaLigado()) {
+            mVLOS.executarCiclo();
+        }
 
     }
 
@@ -163,18 +172,24 @@ public class CenaVLOS extends Cena {
 
     private void drawSistemaDeArquivos(Renderizador mRenderizador) {
 
-        int ePosicaoInicialX = 500;
-        int ePosicaoInicialY = 500;
+        int ePosicaoInicialX = 450;
+        int ePosicaoInicialY = 350;
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "MartinsFS - SATA 1", ePosicaoInicialX, ePosicaoInicialY - 30);
-        mRenderizador.drawQuad(ePosicaoInicialX, ePosicaoInicialY - 20, 155, 10, colorHexadecimal("#c6a700"));
+        int eTamanhoFaixaFS = 155;
 
-        ePosicaoInicialY = 530;
+        int eFaixa_Altura = ePosicaoInicialY + 20;
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "MartinsFS - SATA 1", ePosicaoInicialX, ePosicaoInicialY);
+        mRenderizador.drawQuad(ePosicaoInicialX, eFaixa_Altura, eTamanhoFaixaFS, 10, colorHexadecimal("#66bb6a"));
+
+        ePosicaoInicialY += 70;
 
         int adicionandoNaLinha = 0;
 
         int mPosicaoX = ePosicaoInicialX;
         int mPosicaoY = ePosicaoInicialY;
+
+        int eTotal = 0;
+        int eUsados = 0;
 
         for (BlocoFS eBloco : mVLOS.getVLVFS().get(0).getBlocos()) {
 
@@ -182,6 +197,7 @@ public class CenaVLOS extends Cena {
                 mRenderizador.drawQuad(mPosicaoX, mPosicaoY, 25, 25, colorHexadecimal("#66bb6a"));
             } else {
                 mRenderizador.drawQuad(mPosicaoX, mPosicaoY, 25, 25, colorHexadecimal("#f44336"));
+                eUsados += 1;
             }
 
             TextoSubPequeno.EscreveNegrito(mRenderizador.getG(), String.valueOf(eBloco.getBlocoID()), mPosicaoX + 6, mPosicaoY + 20);
@@ -195,8 +211,19 @@ public class CenaVLOS extends Cena {
                 mPosicaoX = ePosicaoInicialX;
             }
 
-
+            eTotal += 1;
         }
+
+
+        double taxaFS = (double) eTamanhoFaixaFS / 100.0F;
+        double eBlocosFS = (double) eTotal;
+
+        double eUsadoPorcentagem = ((double) eUsados / eBlocosFS) * 100.0F;
+        double eUsadoTamanhoIMG = eUsadoPorcentagem * taxaFS;
+
+
+        mRenderizador.drawQuad(ePosicaoInicialX, eFaixa_Altura, (int) eUsadoTamanhoIMG, 10, colorHexadecimal("#f44336"));
+
 
     }
 
@@ -208,7 +235,7 @@ public class CenaVLOS extends Cena {
         mRenderizador.limpar(Color.WHITE);
 
         if (!mVLOS.estaLigado()) {
-            mVLOS.ligarApenas();
+            return;
         }
 
 
@@ -234,6 +261,7 @@ public class CenaVLOS extends Cena {
     public void colocarProcessos(Renderizador mRenderizador, ArrayList<Processo> eProcessos, int eX, int eY) {
 
         int eContador = 0;
+        int eMaximoProcessosLinha = 5;
 
         int oX = eX;
 
@@ -245,7 +273,7 @@ public class CenaVLOS extends Cena {
             eX += 50;
             eContador += 1;
 
-            if (eContador >= 10) {
+            if (eContador >= eMaximoProcessosLinha) {
                 eContador = 0;
                 eX = oX;
                 eY += 40;

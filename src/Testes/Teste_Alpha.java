@@ -99,7 +99,6 @@ public class Teste_Alpha {
 
         adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 7, 3, 8, 50);
         adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 9, 2, 4, 4);
-        adicionarProcessoUsuarioEmFila(mDespachadorDeProcessos.getProcessos(), 10, 6, 5, 5);
 
         mDespachadorDeOperacoes.setBlocos(30);
         mDespachadorDeOperacoes.setSegmentosOcupados(10);
@@ -111,6 +110,10 @@ public class Teste_Alpha {
         mDespachadorDeOperacoes.adicionarOperacao(1, 0, "Nomes.txt", 2);
         mDespachadorDeOperacoes.adicionarOperacao(3, 0, "Alunos.txt", 3);
         mDespachadorDeOperacoes.adicionarOperacao(3, 1, "Nomes.txt", 0);
+
+        mDespachadorDeOperacoes.adicionarOperacao(5, 0, "Entao.txt", 3);
+
+        mDespachadorDeOperacoes.adicionarOperacao(6, 1, "Entao.txt", 0);
 
 
     }

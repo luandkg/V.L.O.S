@@ -24,11 +24,21 @@
      - IMPLEMENTAÇÕES
         - Pseudo OS 
         - Inicializador de Arquitura
-        - Inicializador de Perifericos
+        - Inicializador de Processador
+        - Inicializador de Disposistivos Perifericos
         - Gerenciador de Processos
         - Gerenciador de Memoria
         - Gerenciador de Recursos
         - Escalonador Fifo
         - Escalonador Round Robin Prioritario
         - Despachador
+        - Sistema de Arquivos MartinsFS 1.0
+        - Interface Grafica com iFrame
+        - Renderizador Grafico - Tecnica de Game Loop
+        - UI - Exibe CPU
+        - UI - Exibe Processos
+        - UI - Exibe Faixas de Memoria
+        - UI - Exibe Blocos do Martins FS
      
+     
+![VLOS_MAINS](https://raw.githubusercontent.com/luandkg/iso/master/res/vlos_main.png)
