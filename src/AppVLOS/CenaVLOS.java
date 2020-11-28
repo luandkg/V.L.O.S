@@ -8,6 +8,8 @@ import VLOS.Arquivador.BlocoFS;
 import VLOS.Arquivador.BlocoStatus;
 import VLOS.Processo.Processo;
 import VLOS.Processo.ProcessoStatus;
+import VLOS.Recurso.ControladorRecurso;
+import VLOS.Recurso.Recurso;
 import VLOS.Utils.BlocoSlice;
 import VLOS.VLOS;
 import VLOS.Etapa;
@@ -63,6 +65,46 @@ public class CenaVLOS extends Cena {
 
     }
 
+    public void drawRecursos(Renderizador mRenderizador) {
+
+        int xRec = 150;
+        int yRec = 90;
+
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "Recursos", xRec, yRec);
+        mRenderizador.drawQuad(xRec - 15, yRec + 6, 100, 2, Color.BLACK);
+
+        yRec += 20;
+
+        int eLinha = 0;
+        int maxLinhas = 4;
+
+        int ox = xRec;
+        int oy = yRec;
+
+        for (ControladorRecurso eRecurso : mVLOS.getVLRecursos().getControladores()) {
+
+
+            TextoPequeno.EscreveNegrito(mRenderizador.getG(), eRecurso.getRecurso().getNome(), xRec - 70, yRec + 20);
+
+            if (eRecurso.isDisponivel()) {
+                mRenderizador.drawQuad(xRec - 100, yRec, 20, 20, colorHexadecimal("#8bc34a"));
+            } else {
+                mRenderizador.drawQuad(xRec - 100, yRec, 20, 20, colorHexadecimal("#e53935"));
+            }
+
+            yRec += 30;
+            eLinha += 1;
+            if (eLinha > maxLinhas) {
+                eLinha = 0;
+                yRec = oy;
+                xRec += 150;
+            }
+
+        }
+
+
+    }
+
     public void drawCPU(Renderizador mRenderizador) {
 
         int xCPU = 350;
@@ -79,28 +121,29 @@ public class CenaVLOS extends Cena {
 
         }
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> CPU : " + eCPUEstado, 500, 200);
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Tempo : " + mVLOS.getTempo() + "s", 500, 250);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> CPU : " + eCPUEstado, 480, 190);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Tempo : " + mVLOS.getTempo() + "s", 480, 220);
 
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Contextos : " + mVLOS.getContextos() , 480, 250);
 
     }
 
     public void drawProcessos(Renderizador mRenderizador) {
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS KERNEL : ", 80, 300);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS KERNEL : ", 50, 300);
         colocarProcessos(mRenderizador, mVLOS.getProcessosKernel(), 120, 320);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 1 : ", 80, 400);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 1 : ", 50, 400);
         colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila1(), 120, 420);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 2 : ", 80, 500);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila2(), 120, 520);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 2 : ", 50, 510);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila2(), 120, 530);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 3 : ", 80, 600);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila3(), 120, 620);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 3 : ", 50, 610);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila3(), 120, 630);
 
 
     }
@@ -238,12 +281,15 @@ public class CenaVLOS extends Cena {
             return;
         }
 
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Luan Freitas          17/0003191", 480, 100);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Vinicius Martins     17/0157962", 480, 150);
 
         if (mVLOS.getEtapa() == Etapa.DETECTANDO_HARDWARE) {
 
             mRenderizador.limpar(Color.RED);
 
         } else if (mVLOS.getEtapa() == Etapa.EXECUTANDO) {
+
 
             drawCPU(mRenderizador);
 
@@ -252,6 +298,8 @@ public class CenaVLOS extends Cena {
             drawMemoria(mRenderizador);
 
             drawSistemaDeArquivos(mRenderizador);
+
+            drawRecursos(mRenderizador);
 
         }
 

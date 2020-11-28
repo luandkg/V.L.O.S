@@ -12,12 +12,16 @@ public class MartinsFS {
 
     private int mNumeroBlocos;
 
+    private boolean mDEBUG_MAPADEBLOCOS;
+
     public MartinsFS(int eNumeroBlocos, ArrayList<DespachanteArquivo> eItens) {
 
         mBlocos = new ArrayList<BlocoFS>();
         mArquivos = new ArrayList<Arquivo>();
 
         mNumeroBlocos = eNumeroBlocos;
+
+        mDEBUG_MAPADEBLOCOS = true;
 
         for (int i = 0; i < eNumeroBlocos; i++) {
 
@@ -46,36 +50,37 @@ public class MartinsFS {
 
     public void exibirFS(String eFrase) {
 
-        System.out.println("\t - MAPA DE BLOCOS DO MARTINS_FS - " + eFrase);
+        if (mDEBUG_MAPADEBLOCOS) {
+            System.out.println("\t - MAPA DE BLOCOS DO MARTINS_FS - " + eFrase);
 
 
-        int e = 5;
-        int a = 0;
-        String eLinha = "";
+            int e = 5;
+            int a = 0;
+            String eLinha = "";
 
-        for (int i = 0; i < mNumeroBlocos; i++) {
+            for (int i = 0; i < mNumeroBlocos; i++) {
 
-            BlocoFS eBloco = mBlocos.get(i);
+                BlocoFS eBloco = mBlocos.get(i);
 
-            if (eBloco.getStatus() == BlocoStatus.LIVRE) {
-                eLinha += "L ";
-            } else {
-                eLinha += "O ";
+                if (eBloco.getStatus() == BlocoStatus.LIVRE) {
+                    eLinha += "L ";
+                } else {
+                    eLinha += "O ";
+                }
+
+                a += 1;
+                if (a >= e) {
+                    System.out.println("\t\t - " + eLinha);
+                    eLinha = "";
+                    a = 0;
+                }
             }
 
-            a += 1;
             if (a >= e) {
                 System.out.println("\t\t - " + eLinha);
-                eLinha = "";
-                a = 0;
             }
+
         }
-
-        if (a >= e) {
-            System.out.println("\t\t - " + eLinha);
-        }
-
-
     }
 
     private void montarArquivoExistente(DespachanteArquivo eDespachanteArquivo) {

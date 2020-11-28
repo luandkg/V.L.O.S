@@ -59,3 +59,13 @@
 2020 11 18  -->>  Interface Gráfica - Martins FS
 
 2020 11 19  -->>  Correção de bugs
+
+2020 11 25  -->>  Implementação de Alocação de Recursos
+2020 11 25  -->>  Implementação de Bloqueio de Recursos
+2020 11 25  -->>  Implementação de Liberação de Recursos
+
+2020 11 27  -->>  Generalização das Dependências de Recursos em Processo
+
+
+
+

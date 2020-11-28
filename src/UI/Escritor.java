@@ -38,7 +38,7 @@ public class Escritor {
 	
 	public void EscreveNegrito(Graphics g, String eTexto, int eX, int eY) {
 
-		g.setFont(new Font("Tahoma", Font.BOLD, mTamanho));
+		g.setFont(new Font("Tahoma", Font.BOLD , mTamanho));
 
 		g.setColor(mCor);
 

@@ -77,7 +77,7 @@ public class DespachanteProcesso {
         return mCodigoModem;
     }
 
-    public int getCodigoDisco() {
+    public int getCodigoSata() {
         return mCodigoDisco;
     }
 

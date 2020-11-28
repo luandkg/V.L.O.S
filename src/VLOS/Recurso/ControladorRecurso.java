@@ -8,14 +8,24 @@ public class ControladorRecurso {
 
     private Recurso mRecurso;
     private boolean mDisponivel;
+    private String mTipo;
 
-    public ControladorRecurso(Recurso eRecurso) {
+    public ControladorRecurso(String eTipo, Recurso eRecurso) {
         mRecurso = eRecurso;
         mDisponivel = true;
+        mTipo = eTipo;
+    }
+
+    public String getTipo() {
+        return mTipo;
     }
 
     public Recurso getRecurso() {
         return mRecurso;
+    }
+
+    public boolean mesmoTipo(String eTipo) {
+        return mTipo.contentEquals(eTipo);
     }
 
     public void usar() {

@@ -32,6 +32,13 @@ public class Processo {
     private ContextoDeHardware mContextoDeHardware;
     private ContextoDeSoftware mContextoDeSoftware;
 
+
+    private ArrayList<Dependencia> mDependencias;
+
+    private int mCiclos;
+    private int mTrocaDeContexto_Enviado;
+    private int mTrocaDeContexto_Recebido;
+
     public Processo(int ePID, ProcessoTipo eTipo, int ePrioridade, long eTempoCriacao, int eTamanho, MemoriaAlocada eMemoriaAlocada) {
 
         mPID = ePID;
@@ -39,9 +46,14 @@ public class Processo {
 
         mPrioridade = ePrioridade;
 
+        mTrocaDeContexto_Enviado = 0;
+        mTrocaDeContexto_Recebido = 0;
+
         mTempoCriacao = eTempoCriacao;
         mTempoConclusao = 0;
         mTempoExecucaoInicio = 0;
+
+        mDependencias = new ArrayList<Dependencia>();
 
         mMemoriaAlocada = eMemoriaAlocada;
 
@@ -54,10 +66,21 @@ public class Processo {
         mContextoDeHardware = new ContextoDeHardware();
         mContextoDeSoftware = new ContextoDeSoftware(mPID);
 
+        mCiclos = 0;
+
     }
 
     public void adicionarOperacao(DespachanteOperacao eDespachanteOperacao) {
         mOperacoes.add(eDespachanteOperacao);
+    }
+
+
+    public ArrayList<Dependencia> getDependencias() {
+        return mDependencias;
+    }
+
+    public void adicionarDependencia(Dependencia eDependencia) {
+        mDependencias.add(eDependencia);
     }
 
 
@@ -133,15 +156,23 @@ public class Processo {
         return mProcessado;
     }
 
-
-    public void processar(CPU mCPU, VLVFS mVLVFS) {
-
+    public void enviarContextos(CPU mCPU) {
 
         // TROCA DE CONTEXTO -> ENVIAR PARA CPU CONTEXTO DE HARDWARE
         // TROCA DE CONTEXTO -> ENVIAR PARA CPU CONTEXTO DE SOFTWARE
 
+
         mContextoDeSoftware.enviar(mCPU);
         mContextoDeHardware.enviar(mCPU);
+
+        mTrocaDeContexto_Enviado += 1;
+
+    }
+
+    public void processar(CPU mCPU, VLVFS mVLVFS) {
+
+        mCiclos += 1;
+
 
         for (DespachanteOperacao eOperacao : mOperacoes) {
             if (!eOperacao.isRealizado()) {
@@ -198,12 +229,22 @@ public class Processo {
 
 
         if (mProcessado < mTamanho) {
-            mProcessado += 1;
+            if (mCiclos >= 10) {
+                mCiclos = 0;
+                mProcessado += 1;
+            }
+
         }
 
         if (mProcessado >= mTamanho) {
             mProcessoStatus = ProcessoStatus.CONCLUIDO;
         }
+
+
+    }
+
+
+    public void receberContextos(CPU mCPU) {
 
         // TROCA DE CONTEXTO -> RECEBER DA CPU CONTEXTO DE HARDWARE
         // TROCA DE CONTEXTO -> RECEBER DA CPU CONTEXTO DE SOFTWARE
@@ -211,7 +252,7 @@ public class Processo {
         mContextoDeSoftware.receber(mCPU);
         mContextoDeHardware.receber(mCPU);
 
-
+        mTrocaDeContexto_Recebido += 1;
     }
 
     public void verificar() {
@@ -240,4 +281,13 @@ public class Processo {
     public void setTempoExecucaoInicio(long eTempoExecucaoInicio) {
         mTempoExecucaoInicio = eTempoExecucaoInicio;
     }
+
+    public int getTrocaDeContexto_Enviado() {
+        return mTrocaDeContexto_Enviado;
+    }
+
+    public int getTrocaDeContexto_Recebido() {
+        return mTrocaDeContexto_Recebido;
+    }
+
 }

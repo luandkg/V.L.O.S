@@ -2,13 +2,13 @@ package VLOS.Utils;
 
 import VLOS.Despachante.DespachanteProcesso;
 import VLOS.Memoria.VLMemoria;
+import VLOS.Processo.Dependencia;
 import VLOS.Processo.Processo;
 import VLOS.Processo.ProcessoStatus;
 import VLOS.Processo.VLProcessos;
 import VLOS.Recurso.Recurso;
 import VLOS.Recurso.VLRecursos;
-import VLOS.Utils.Utils;
-import VLOS.VLOS;
+
 
 public class Dumper {
 
@@ -88,6 +88,79 @@ public class Dumper {
 
     }
 
+    private String getProcessoDebug(String eInicio, Processo eProcesso, long mTempoCorrente) {
+
+        String mRet = "";
+
+        String mP0 = eInicio + mUtils.getIntCasas(eProcesso.getPID(), 3);
+        String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
+        String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
+        String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
+        String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
+        String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
+        String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
+
+        long mTempoEspera = 0;
+        if (eProcesso.isConcluido()) {
+            mTempoEspera = eProcesso.getTempoConclusao() - eProcesso.getTempoCriacao();
+        } else {
+            mTempoEspera = mTempoCorrente - eProcesso.getTempoCriacao();
+        }
+        String mP7 = " | T.Espera : " + mUtils.getLongCasas(mTempoEspera, 3) + "s";
+        if (eProcesso.getProcessado() > 0 || eProcesso.getStatus() == ProcessoStatus.EXECUTANDO) {
+            String mP8 = " | T.Inicio : " + mUtils.getLongCasas(eProcesso.getTempoExecucaoInicio(), 3) + "s";
+            if (eProcesso.isConcluido()) {
+                String mP9 = " | T.Conclusao : " + mUtils.getLongCasas(eProcesso.getTempoConclusao(), 3) + "s";
+                long mTempoExecucao = eProcesso.getTempoConclusao() - eProcesso.getTempoExecucaoInicio();
+                String mP10 = " | T.Execucao : " + mUtils.getLongCasas(mTempoExecucao, 3) + "s";
+                mRet = mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8 + mP9 + mP10;
+            } else {
+                mRet = mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8;
+            }
+        } else {
+            mRet = mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7;
+        }
+
+        return mRet;
+    }
+
+    private String getProcessoEsperandoDebug(String eInicio, Processo eProcesso) {
+
+        String mRet = "";
+
+        String mP0 = eInicio + mUtils.getIntCasas(eProcesso.getPID(), 3);
+        String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
+        String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
+        String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
+        String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
+        String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
+        String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
+
+        int mPrecisa = 0;
+        int mConseguiu = 0;
+
+        for (Dependencia mDependencia : eProcesso.getDependencias()) {
+            mPrecisa += 1;
+
+            if (mDependencia.getStatus()) {
+                mConseguiu += 1;
+            } else {
+
+            }
+        }
+
+
+        String mP7 = " | Precisa : " + mPrecisa;
+
+        String mP8 = " | Conseguiu : " + mConseguiu;
+
+        mRet = mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8;
+
+
+        return mRet;
+    }
+
+
     public void dump_processosCompleto(long mTempoCorrente, VLProcessos mVLProcessos) {
 
         System.out.println("\t-----------------------------------------------------");
@@ -96,33 +169,51 @@ public class Dumper {
         System.out.println("\t\t - KERNEL");
         for (Processo eProcesso : mVLProcessos.getProcessosKernel()) {
 
-            String mP0 = " - P.KERNEL  : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
-            String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
-            String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
-            String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
-            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
-            String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
-            String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
+            String eDebug = getProcessoDebug(" - P.KERNEL  : ", eProcesso, mTempoCorrente);
+            System.out.println("\t\t\t" + eDebug);
 
-            long mTempoEspera = 0;
-            if (eProcesso.isConcluido()) {
-                mTempoEspera = eProcesso.getTempoConclusao() - eProcesso.getTempoCriacao();
-            } else {
-                mTempoEspera = mTempoCorrente - eProcesso.getTempoCriacao();
-            }
-            String mP7 = " | T.Espera : " + mUtils.getLongCasas(mTempoEspera, 3) + "s";
-            if (eProcesso.getProcessado() > 0 || eProcesso.getStatus() == ProcessoStatus.EXECUTANDO) {
-                String mP8 = " | T.Inicio : " + mUtils.getLongCasas(eProcesso.getTempoExecucaoInicio(), 3) + "s";
-                if (eProcesso.isConcluido()) {
-                    String mP9 = " | T.Conclusao : " + mUtils.getLongCasas(eProcesso.getTempoConclusao(), 3) + "s";
-                    long mTempoExecucao = eProcesso.getTempoConclusao() - eProcesso.getTempoExecucaoInicio();
-                    String mP10 = " | T.Execucao : " + mUtils.getLongCasas(mTempoExecucao, 3) + "s";
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8 + mP9 + mP10);
-                } else {
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8);
-                }
-            } else {
-                System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7);
+        }
+
+        System.out.println("\t\t - FILA 1");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila1()) {
+
+            String eDebug = getProcessoDebug(" - P.USUARIO : ", eProcesso, mTempoCorrente);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t\t - FILA 2");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila2()) {
+
+            String eDebug = getProcessoDebug(" - P.USUARIO : ", eProcesso, mTempoCorrente);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t\t - FILA 3");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila3()) {
+
+            String eDebug = getProcessoDebug(" - P.USUARIO : ", eProcesso, mTempoCorrente);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t-----------------------------------------------------");
+
+    }
+
+
+    public void dump_processosEsperando(VLProcessos mVLProcessos) {
+
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t - PROCESSOS ESPERANDO ");
+
+        System.out.println("\t\t - KERNEL");
+        for (Processo eProcesso : mVLProcessos.getProcessosKernel()) {
+
+            if (eProcesso.isEsperando()) {
+                String eDebug = getProcessoEsperandoDebug(" - P.KERNEL  : ", eProcesso);
+                System.out.println("\t\t\t" + eDebug);
             }
 
 
@@ -131,34 +222,9 @@ public class Dumper {
         System.out.println("\t\t - FILA 1");
         for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila1()) {
 
-
-            String mP0 = " - P.USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
-            String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
-            String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
-            String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
-            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
-            String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
-            String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
-
-            long mTempoEspera = 0;
-            if (eProcesso.isConcluido()) {
-                mTempoEspera = eProcesso.getTempoConclusao() - eProcesso.getTempoCriacao();
-            } else {
-                mTempoEspera = mTempoCorrente - eProcesso.getTempoCriacao();
-            }
-            String mP7 = " | T.Espera : " + mUtils.getLongCasas(mTempoEspera, 3) + "s";
-            if (eProcesso.getProcessado() > 0 || eProcesso.getStatus() == ProcessoStatus.EXECUTANDO) {
-                String mP8 = " | T.Inicio : " + mUtils.getLongCasas(eProcesso.getTempoExecucaoInicio(), 3) + "s";
-                if (eProcesso.isConcluido()) {
-                    String mP9 = " | T.Conclusao : " + mUtils.getLongCasas(eProcesso.getTempoConclusao(), 3) + "s";
-                    long mTempoExecucao = eProcesso.getTempoConclusao() - eProcesso.getTempoExecucaoInicio();
-                    String mP10 = " | T.Execucao : " + mUtils.getLongCasas(mTempoExecucao, 3) + "s";
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8 + mP9 + mP10);
-                } else {
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8);
-                }
-            } else {
-                System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7);
+            if (eProcesso.isEsperando()) {
+                String eDebug = getProcessoEsperandoDebug(" - P.USUARIO : ", eProcesso);
+                System.out.println("\t\t\t" + eDebug);
             }
 
         }
@@ -166,35 +232,9 @@ public class Dumper {
         System.out.println("\t\t - FILA 2");
         for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila2()) {
 
-
-            String mP0 = " - P.USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
-            String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
-            String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
-            String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
-            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
-            String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
-
-            String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
-
-            long mTempoEspera = 0;
-            if (eProcesso.isConcluido()) {
-                mTempoEspera = eProcesso.getTempoConclusao() - eProcesso.getTempoCriacao();
-            } else {
-                mTempoEspera = mTempoCorrente - eProcesso.getTempoCriacao();
-            }
-            String mP7 = " | T.Espera : " + mUtils.getLongCasas(mTempoEspera, 3) + "s";
-            if (eProcesso.getProcessado() > 0 || eProcesso.getStatus() == ProcessoStatus.EXECUTANDO) {
-                String mP8 = " | T.Inicio : " + mUtils.getLongCasas(eProcesso.getTempoExecucaoInicio(), 3) + "s";
-                if (eProcesso.isConcluido()) {
-                    String mP9 = " | T.Conclusao : " + mUtils.getLongCasas(eProcesso.getTempoConclusao(), 3) + "s";
-                    long mTempoExecucao = eProcesso.getTempoConclusao() - eProcesso.getTempoExecucaoInicio();
-                    String mP10 = " | T.Execucao : " + mUtils.getLongCasas(mTempoExecucao, 3) + "s";
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8 + mP9 + mP10);
-                } else {
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8);
-                }
-            } else {
-                System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7);
+            if (eProcesso.isEsperando()) {
+                String eDebug = getProcessoEsperandoDebug(" - P.USUARIO : ", eProcesso);
+                System.out.println("\t\t\t" + eDebug);
             }
 
         }
@@ -202,35 +242,9 @@ public class Dumper {
         System.out.println("\t\t - FILA 3");
         for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila3()) {
 
-
-            String mP0 = " - P.USUARIO : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
-            String mP1 = " | Prio. : " + mUtils.getIntCasas(eProcesso.getPrioridade(), 2);
-            String mP2 = " | M.Offset : " + mUtils.getLongCasas(eProcesso.getOffset(), 5);
-            String mP3 = " | B.Alocados : " + mUtils.getLongCasas(eProcesso.getBlocos(), 5);
-            String mP4 = " | Status : " + mUtils.getOrganizado(eProcesso.getStatus().toString(), 10);
-            String mP5 = " | Proc : " + eProcesso.getProcessadoStatus();
-
-            String mP6 = " | T.Criacao : " + mUtils.getLongCasas(eProcesso.getTempoCriacao(), 3) + "s";
-
-            long mTempoEspera = 0;
-            if (eProcesso.isConcluido()) {
-                mTempoEspera = eProcesso.getTempoConclusao() - eProcesso.getTempoCriacao();
-            } else {
-                mTempoEspera = mTempoCorrente - eProcesso.getTempoCriacao();
-            }
-            String mP7 = " | T.Espera : " + mUtils.getLongCasas(mTempoEspera, 3) + "s";
-            if (eProcesso.getProcessado() > 0 || eProcesso.getStatus() == ProcessoStatus.EXECUTANDO) {
-                String mP8 = " | T.Inicio : " + mUtils.getLongCasas(eProcesso.getTempoExecucaoInicio(), 3) + "s";
-                if (eProcesso.isConcluido()) {
-                    String mP9 = " | T.Conclusao : " + mUtils.getLongCasas(eProcesso.getTempoConclusao(), 3) + "s";
-                    long mTempoExecucao = eProcesso.getTempoConclusao() - eProcesso.getTempoExecucaoInicio();
-                    String mP10 = " | T.Execucao : " + mUtils.getLongCasas(mTempoExecucao, 3) + "s";
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8 + mP9 + mP10);
-                } else {
-                    System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7 + mP8);
-                }
-            } else {
-                System.out.println("\t\t\t" + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7);
+            if (eProcesso.isEsperando()) {
+                String eDebug = getProcessoEsperandoDebug(" - P.USUARIO : ", eProcesso);
+                System.out.println("\t\t\t" + eDebug);
             }
 
         }
@@ -258,7 +272,7 @@ public class Dumper {
         String mP0 = "";
 
         if (eProcesso.isKernel()) {
-            mP0 = " - P.KERNEL  : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
+            mP0 = " - P.KERNEL   : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
         } else {
             mP0 = " - P.USUARIO  : " + mUtils.getIntCasas(eProcesso.getPID(), 3);
         }
@@ -292,6 +306,64 @@ public class Dumper {
         }
 
 
+    }
+
+    public void dump_processosTrocaDeContexto(VLProcessos mVLProcessos) {
+
+        System.out.println("\t-----------------------------------------------------");
+        System.out.println("\t - TROCADOR DE CONTEXTO DE PROCESSOS");
+
+        System.out.println("\t\t - KERNEL");
+        for (Processo eProcesso : mVLProcessos.getProcessosKernel()) {
+
+            String eDebug = getProcessoDebugTrocaDeContexto(" - P.KERNEL  : ", eProcesso);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t\t - FILA 1");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila1()) {
+
+            String eDebug = getProcessoDebugTrocaDeContexto(" - P.USUARIO : ", eProcesso);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t\t - FILA 2");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila2()) {
+
+            String eDebug = getProcessoDebugTrocaDeContexto(" - P.USUARIO : ", eProcesso);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t\t - FILA 3");
+        for (Processo eProcesso : mVLProcessos.getProcessosUsuario_Fila3()) {
+
+            String eDebug = getProcessoDebugTrocaDeContexto(" - P.USUARIO : ", eProcesso);
+            System.out.println("\t\t\t" + eDebug);
+
+        }
+
+        System.out.println("\t-----------------------------------------------------");
+
+
+    }
+
+    private String getProcessoDebugTrocaDeContexto(String eInicio, Processo eProcesso) {
+
+        String mRet = "";
+
+        String mP0 = eInicio + mUtils.getIntCasas(eProcesso.getPID(), 3);
+        String mP11 = " | Processado  : " + mUtils.getIntCasas(eProcesso.getProcessado(), 3);
+
+        String mP1 = " | Contexto Enviado  : " + mUtils.getIntCasas(eProcesso.getTrocaDeContexto_Enviado(), 3);
+        String mP2 = " | Contexto Recebido : " + mUtils.getIntCasas(eProcesso.getTrocaDeContexto_Recebido(), 3);
+
+        mRet = mP0 + mP11 + mP1 + mP2;
+
+
+        return mRet;
     }
 
     public void dump_memoria(VLMemoria mVLMemoria) {
@@ -342,7 +414,7 @@ public class Dumper {
         String mP4 = " | Impressora : " + mUtils.getIntCasas(mDespachante.getCodigoImpressora(), 2);
         String mP5 = " | Scanner : " + mUtils.getIntCasas(mDespachante.getCodigoScanner(), 2);
         String mP6 = " | Modem : " + mUtils.getIntCasas(mDespachante.getCodigoModem(), 2);
-        String mP7 = " | Disco : " + mUtils.getIntCasas(mDespachante.getCodigoDisco(), 2);
+        String mP7 = " | Sata : " + mUtils.getIntCasas(mDespachante.getCodigoSata(), 2);
 
         System.out.println("\t\t -->> DESPACHAR " + mP0 + mP1 + mP2 + mP3 + mP4 + mP5 + mP6 + mP7);
 

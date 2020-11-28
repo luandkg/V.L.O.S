@@ -330,6 +330,50 @@ public class VLProcessos {
 
     }
 
+
+    public boolean temProcessoUsuarioEmEspera() {
+
+        boolean tem = false;
+
+        for (Processo mProcesso : mUsuario_Processos_01) {
+
+            if (mProcesso.isEsperando()) {
+                tem = true;
+                break;
+            }
+
+        }
+
+        if (!tem) {
+
+            for (Processo mProcesso : mUsuario_Processos_02) {
+
+                if (mProcesso.isEsperando()) {
+                    tem = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        if (!tem) {
+
+            for (Processo mProcesso : mUsuario_Processos_03) {
+
+                if (mProcesso.isEsperando()) {
+                    tem = true;
+                    break;
+                }
+
+            }
+
+        }
+
+        return tem;
+
+    }
+
     public boolean temEscalonado() {
         return mTemEscalonado;
     }
