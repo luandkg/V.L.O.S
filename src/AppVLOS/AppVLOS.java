@@ -1,12 +1,8 @@
 package AppVLOS;
 
 import Hardware.*;
-import UI.Windows;
 import VLOS.VLOS;
-import VLUtils.OARoad;
-
-import java.awt.*;
-
+import VLOS.ModoSistema;
 
 public class AppVLOS {
 
@@ -17,12 +13,9 @@ public class AppVLOS {
         System.out.println("");
         System.out.println("\t Aluno : Luan Freitas      -  17/0003191");
         System.out.println("\t Aluno : Vinicius Martins  -  17/0157962");
-
-        OARoad mOARoadmap = new OARoad("res/roadmap.trilha");
-        mOARoadmap.exportarImagemHV("res/roadmap.png", new Color(52, 73, 94), new Color(52, 73, 94));
-
-
         System.out.println("");
+
+        ModoSistema mModo = ModoSistema.INTERFACE;
 
 
         // MONTANDO A MAQUINA i368 COM O PROCESSADOR x86
@@ -30,7 +23,7 @@ public class AppVLOS {
 
 
         // ADICIONANDO HARDWARE A MAQUINA
-        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024 ) * 1024 * 1024));
+        mMaquina.adicionarDispositivo(new Memoria("HX434C16FB3AK4", (1024) * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("ST2000DM008", 500 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new SATA("WD20PURX", 200 * 1024 * 1024));
         mMaquina.adicionarDispositivo(new Impressora("Ink Tank 416 Z4B55A HP"));
@@ -40,20 +33,25 @@ public class AppVLOS {
         mMaquina.adicionarDispositivo(new Modem("TP-Link AC1200"));
 
 
-        // INSTALANDO SISTEMA OPERACIONAL VLOS NA MAQUINA i368
+        // INSTALA SISTEMA OPERACIONAL VLOS NA MAQUINA i368
         VLOS mVLOS = new VLOS(mMaquina);
 
+        if (mModo == ModoSistema.TERMINAL) {
 
+            // LIGANDO A MAQUINA i368 com VLOS - MODO TERMINAL
 
-        // LIGANDO A MAQUINA i368 - MODO TERMINAL
+            mVLOS.executarTerminal();
 
-        //  mVLOS.ligar();
+        } else if (mModo == ModoSistema.INTERFACE) {
 
+            // LIGANDO A MAQUINA i368 com VLOS - MODO INTERFACE GRAFICA
 
-        // LIGANDO A MAQUINA i368 - MODO INTERFACE GRAFICA
-        Windows mWindows = new Windows("VLOS", 800, 1000,new CenaVLOS(mVLOS, 800, 1000));
-        Thread mThread = new Thread(mWindows);
-        mThread.start();
+            mVLOS.executarInterface();
+
+        } else {
+
+            System.out.println(" -->> MODO : DESCONHECIDO !");
+        }
 
 
     }

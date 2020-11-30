@@ -20,6 +20,10 @@ public class ControladorRecurso {
         return mTipo;
     }
 
+    public int getRID() {
+        return mRecurso.getRID();
+    }
+
     public Recurso getRecurso() {
         return mRecurso;
     }

@@ -18,13 +18,13 @@ public class Windows extends JFrame implements Runnable {
     private Image mImagem;
     private Graphics2D mGraficos;
 
-    public Windows(String eTitulo, int eLargura, int eAltura, Cena eCena) {
+    public Windows(Cena eCena) {
 
-        mLargura = eLargura;
-        mAltura = eAltura;
+        mLargura = eCena.getLargura();
+        mAltura = eCena.getAltura();
 
-        this.setSize(eLargura, eAltura);
-        this.setTitle(eTitulo);
+        this.setSize(eCena.getLargura(), eCena.getAltura());
+        this.setTitle(eCena.getNome());
         this.setResizable(false);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,7 +157,6 @@ public class Windows extends JFrame implements Runnable {
         g.drawImage(mImagem, 0, 7, getLargura(), getAltura(), null);
 
     }
-
 
 
 }

@@ -1,7 +1,9 @@
 package VLOS;
 
+import VLOS.UI.CenaVLOS;
 import Hardware.*;
 import Testes.Testes;
+import UI.Windows;
 import VLOS.Arquivador.VLVFS;
 import VLOS.Despachante.*;
 import VLOS.Memoria.MemoriaAlocada;
@@ -18,7 +20,6 @@ public class VLOS {
 
     private Maquina mMaquina;
 
-    private long mBloco;
 
     private VLMemoria mVLMemoria;
     private VLProcessos mVLProcessos;
@@ -84,7 +85,6 @@ public class VLOS {
         mCicloMaximo = 0;
         mQuantum = 0;
         mQuantizando = 0;
-        mBloco = 0;
         mEtapa = Etapa.DESLIGADO;
 
         mRecursosDispositivos = new ArrayList<Dispositivo>();
@@ -158,29 +158,21 @@ public class VLOS {
 
     }
 
-    public void ligar() {
+    public void executarInterface() {
 
-        mEtapa = Etapa.LIGANDO;
+        Windows mWindows = new Windows(new CenaVLOS(this, "VLOS", 820, 1000));
+        Thread mThread = new Thread(mWindows);
+        mThread.start();
 
-        mLigado = true;
-        mTempo = 0;
-        mContextos = 0;
+    }
 
-        mQuantum = 0;
-        mCicloContagem = 0;
-        mCicloMaximo = 10;
-        mQuantizando = 0;
-        mBloco = 0;
+    public void executarTerminal() {
 
-        // BOOT HARDWARE DE SISTEMA
-        detectarHardware();
 
-        esperar();
+        // LIGAR MAQUINA e INSTALAR VLOS
+        ligarApenas();
 
         if (mTudoOK) {
-
-            // INICIAR VLOS
-            iniciar();
 
             //  LOOP NUCLEO DO SISTEMA OPERACIONAL
             mEtapa = Etapa.EXECUTANDO;
@@ -189,12 +181,11 @@ public class VLOS {
                 executarCiclo();
             }
 
-            // O SISTEMA SERA DESLIGADO
-            desligar();
-
         }
 
-        mEtapa = Etapa.DESLIGADO;
+        // O SISTEMA SERA DESLIGADO
+        desligarTodo();
+
 
     }
 
@@ -224,7 +215,6 @@ public class VLOS {
         mCicloContagem = 0;
         mCicloMaximo = 10;
         mQuantizando = 0;
-        mBloco = 0;
 
         // BOOT HARDWARE DE SISTEMA
         detectarHardware();
@@ -236,7 +226,7 @@ public class VLOS {
             // INICIAR VLOS
             iniciar();
 
-            //  LOOP NUCLEO DO SISTEMA OPERACIONAL
+            //  INICIAR LOOP NUCLEO DO SISTEMA OPERACIONAL
             mEtapa = Etapa.EXECUTANDO;
         } else {
             desligar();
@@ -588,10 +578,9 @@ public class VLOS {
         print_inicializacao();
 
         mQuantum = 1 * 10; // 1 SEGUNDO = 10 CICLOS DE PROCESSAMENTO DA CPU
-        mBloco = 1024 * 1024;
 
         mVLProcessos = new VLProcessos(mCPU);
-        mVLMemoria = new VLMemoria(mMemoria, mBloco);
+        mVLMemoria = new VLMemoria(mMemoria, 1024 * 1024);
         mVLRecursos = new VLRecursos();
         mVLVFS = new VLVFS();
 
@@ -630,7 +619,7 @@ public class VLOS {
         if (mDEBUG_MEMORIA) {
             System.out.println("\t -->> Reservando 64 Blocos para KERNEL");
         }
-        mVLMemoria.reservarKernel(64 * mBloco);
+        mVLMemoria.reservarKernel(64 * mVLMemoria.getTamanhoBloco());
 
 
         if (mDEBUG_MEMORIA) {
@@ -1146,5 +1135,13 @@ public class VLOS {
 
     public VLRecursos getVLRecursos() {
         return mVLRecursos;
+    }
+
+    public String getMemoriaStatus() {
+        return mVLMemoria.getMemoriaStatus();
+    }
+
+    public String getRecursosStatus() {
+        return mVLRecursos.getRecursosStatus();
     }
 }

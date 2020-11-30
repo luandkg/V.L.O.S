@@ -1,4 +1,4 @@
-package AppVLOS;
+package VLOS.UI;
 
 import UI.Cena;
 import UI.Renderizador;
@@ -9,7 +9,6 @@ import VLOS.Arquivador.BlocoStatus;
 import VLOS.Processo.Processo;
 import VLOS.Processo.ProcessoStatus;
 import VLOS.Recurso.ControladorRecurso;
-import VLOS.Recurso.Recurso;
 import VLOS.Utils.BlocoSlice;
 import VLOS.VLOS;
 import VLOS.Etapa;
@@ -22,25 +21,18 @@ public class CenaVLOS extends Cena {
 
     private VLOS mVLOS;
 
-    private int mLargura;
-    private int mAltura;
-
     private Escritor TextoPequeno;
     private Escritor TextoSubPequeno;
 
-    private int mVLS_BLOCOS_LINHA;
 
-    public CenaVLOS(VLOS eATLOS, int eLargura, int eAltura) {
+    public CenaVLOS(VLOS eATLOS, String eNome, int eLargura, int eAltura) {
 
-        mLargura = eLargura;
-        mAltura = eAltura;
+        this.setConfigurar(eNome, eLargura, eAltura);
 
         TextoPequeno = new Escritor(15, Color.BLACK);
         TextoSubPequeno = new Escritor(12, Color.BLACK);
 
         mVLOS = eATLOS;
-        mVLS_BLOCOS_LINHA = 5;
-
 
     }
 
@@ -65,38 +57,78 @@ public class CenaVLOS extends Cena {
 
     }
 
+
+    @Override
+    public void draw(Graphics g) {
+
+        Renderizador mRenderizador = new Renderizador(g, this.getLargura(), this.getAltura());
+
+        mRenderizador.limpar(Color.WHITE);
+
+        if (!mVLOS.estaLigado()) {
+            return;
+        }
+
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Luan Freitas          17/0003191", 460, 70);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Vinicius Martins     17/0157962", 460, 100);
+
+        if (mVLOS.getEtapa() == Etapa.DETECTANDO_HARDWARE) {
+
+            mRenderizador.limpar(Color.RED);
+
+        } else if (mVLOS.getEtapa() == Etapa.EXECUTANDO) {
+
+
+            drawCPU(mRenderizador);
+
+            drawRecursos(mRenderizador);
+
+            drawProcessos(mRenderizador);
+
+            drawSistemaDeArquivos(mRenderizador);
+
+            drawMemoria(mRenderizador);
+
+        }
+
+    }
+
     public void drawRecursos(Renderizador mRenderizador) {
 
         int xRec = 150;
-        int yRec = 90;
+        int yRec = 70;
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "Recursos", xRec, yRec);
-        mRenderizador.drawQuad(xRec - 15, yRec + 6, 100, 2, Color.BLACK);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "RECURSOS", xRec, yRec);
+        mRenderizador.drawQuad(xRec - 15, yRec + 6, 120, 2, Color.BLACK);
 
         yRec += 20;
 
-        int eLinha = 0;
-        int maxLinhas = 4;
+        int eColuna = 0;
+        int maxPorColuna = 5;
 
-        int ox = xRec;
-        int oy = yRec;
+        int oxRec = xRec;
+        int oyRec = yRec;
 
         for (ControladorRecurso eRecurso : mVLOS.getVLRecursos().getControladores()) {
 
 
             TextoPequeno.EscreveNegrito(mRenderizador.getG(), eRecurso.getRecurso().getNome(), xRec - 70, yRec + 20);
 
-            if (eRecurso.isDisponivel()) {
-                mRenderizador.drawQuad(xRec - 100, yRec, 20, 20, colorHexadecimal("#8bc34a"));
-            } else {
-                mRenderizador.drawQuad(xRec - 100, yRec, 20, 20, colorHexadecimal("#e53935"));
+            Color eRecursoCor = colorHexadecimal("#8bc34a");
+            if (eRecurso.isBloqueado()) {
+                eRecursoCor = colorHexadecimal("#e53935");
             }
 
+            mRenderizador.drawQuad(xRec - 100, yRec + 3, 20, 20, eRecursoCor);
+
+            mRenderizador.drawQuad((xRec - 100)+7, (yRec + 3)+7, 5, 5, colorHexadecimal("#f5f5f5"));
+
+
             yRec += 30;
-            eLinha += 1;
-            if (eLinha > maxLinhas) {
-                eLinha = 0;
-                yRec = oy;
+            eColuna += 1;
+            if (eColuna >= maxPorColuna) {
+                eColuna = 0;
+                yRec = oyRec;
                 xRec += 150;
             }
 
@@ -111,39 +143,53 @@ public class CenaVLOS extends Cena {
         int yCPU = 50;
 
 
-        mRenderizador.drawQuad(xCPU, yCPU, 100, 200, colorHexadecimal("#90a4ae"));
+        mRenderizador.drawQuad(xCPU, yCPU, 100, 250, colorHexadecimal("#90a4ae"));
 
         String eCPUEstado = "OCIOSA";
+
         if (mVLOS.getCPU().estaExecutando()) {
+
             eCPUEstado = "EXECUTANDO";
 
-            mRenderizador.drawQuad(xCPU + 10, yCPU + 10, 80, 180, colorHexadecimal("#f9a825"));
+            mRenderizador.drawQuad(xCPU + 10, yCPU + 10, 80, 200, colorHexadecimal("#f9a825"));
+
+            mRenderizador.drawQuad(xCPU + 10, yCPU + 220, 80, 20, colorHexadecimal("#f9a825"));
 
         }
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> CPU : " + eCPUEstado, 480, 190);
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Tempo : " + mVLOS.getTempo() + "s", 480, 220);
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Contextos : " + mVLOS.getContextos() , 480, 250);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> CPU : " + eCPUEstado, 460, 160);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Tempo : " + mVLOS.getTempo() + "s", 460, 190);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Trocas de Contextos : " + mVLOS.getContextos(), 460, 220);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Memoria : " + mVLOS.getMemoriaStatus(), 460, 250);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Recursos : " + mVLOS.getRecursosStatus(), 460, 280);
 
     }
 
     public void drawProcessos(Renderizador mRenderizador) {
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS KERNEL : ", 50, 300);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosKernel(), 120, 320);
+        int xProc = 150;
+        int yProc = 280;
+
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), "ESCALONADOR", xProc, yProc);
+        mRenderizador.drawQuad(xProc - 15, yProc + 6, 140, 2, Color.BLACK);
+
+        int mEspacoAltura = 110;
+
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS KERNEL : ", 50, yProc + 50);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosKernel(), 120, yProc + 50 + 20);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 1 : ", 50, 400);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila1(), 120, 420);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 1 : ", 50, yProc + 50 + mEspacoAltura);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila1(), 120, yProc + 50 + mEspacoAltura + 20);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 2 : ", 50, 510);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila2(), 120, 530);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 2 : ", 50, yProc + 50 + (2 * mEspacoAltura) + 10);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila2(), 120, yProc + 50 + (2 * mEspacoAltura) + 30);
 
 
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 3 : ", 50, 610);
-        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila3(), 120, 630);
+        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> PROCESSOS FILA 3 : ", 50, yProc + 50 + (3 * mEspacoAltura) + 10);
+        colocarProcessos(mRenderizador, mVLOS.getProcessosUsuario_Fila3(), 120, yProc + 50 + (3 * mEspacoAltura) + 30);
 
 
     }
@@ -220,6 +266,9 @@ public class CenaVLOS extends Cena {
 
         int eTamanhoFaixaFS = 155;
 
+        int mVLS_BLOCOS_LINHA = 5;
+
+
         int eFaixa_Altura = ePosicaoInicialY + 20;
         TextoPequeno.EscreveNegrito(mRenderizador.getG(), "MartinsFS - SATA 1", ePosicaoInicialX, ePosicaoInicialY);
         mRenderizador.drawQuad(ePosicaoInicialX, eFaixa_Altura, eTamanhoFaixaFS, 10, colorHexadecimal("#66bb6a"));
@@ -267,41 +316,6 @@ public class CenaVLOS extends Cena {
 
         mRenderizador.drawQuad(ePosicaoInicialX, eFaixa_Altura, (int) eUsadoTamanhoIMG, 10, colorHexadecimal("#f44336"));
 
-
-    }
-
-    @Override
-    public void draw(Graphics g) {
-
-        Renderizador mRenderizador = new Renderizador(g, mLargura, mAltura);
-
-        mRenderizador.limpar(Color.WHITE);
-
-        if (!mVLOS.estaLigado()) {
-            return;
-        }
-
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Luan Freitas          17/0003191", 480, 100);
-        TextoPequeno.EscreveNegrito(mRenderizador.getG(), " -->> Vinicius Martins     17/0157962", 480, 150);
-
-        if (mVLOS.getEtapa() == Etapa.DETECTANDO_HARDWARE) {
-
-            mRenderizador.limpar(Color.RED);
-
-        } else if (mVLOS.getEtapa() == Etapa.EXECUTANDO) {
-
-
-            drawCPU(mRenderizador);
-
-            drawProcessos(mRenderizador);
-
-            drawMemoria(mRenderizador);
-
-            drawSistemaDeArquivos(mRenderizador);
-
-            drawRecursos(mRenderizador);
-
-        }
 
     }
 

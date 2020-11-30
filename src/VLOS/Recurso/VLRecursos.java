@@ -110,4 +110,73 @@ public class VLRecursos {
 
     }
 
+    public int getQuantidade() {
+        return mControladores.size();
+    }
+
+    public int getUsados() {
+
+        int i = 0;
+        for (ControladorRecurso eProcurando : mControladores) {
+            if (eProcurando.isBloqueado()) {
+                i += 1;
+            }
+        }
+
+        return i;
+    }
+
+    public String getRecursosStatus() {
+
+        long eTotal = this.getQuantidade();
+        long eUsados = this.getUsados();
+
+        double eTaxa = ((double) eUsados / (double) eTotal) * 100.0F;
+
+        //String eTaxador = getComQuantasCasas(String.valueOf(eTaxa), 2) + " % de " + eTotal + " recursos";
+        String eTaxador = getComQuantasCasas(String.valueOf(eTaxa), 2) + " % ";
+
+        return eTaxador;
+    }
+
+    public String getComQuantasCasas(String eValor, int eCasas) {
+
+        int i = 0;
+        int o = eValor.length();
+
+        String ret = "";
+
+        boolean mPontuado = false;
+        int ePontuando = 0;
+
+        while (i < o) {
+            String l = String.valueOf(eValor.charAt(i));
+
+            if (mPontuado == false) {
+                if (l.contentEquals(".")) {
+                    mPontuado = true;
+                    if (eCasas > 0) {
+                        ret += l;
+                    }
+                } else {
+                    ret += l;
+                }
+            } else {
+
+                if (ePontuando < eCasas) {
+                    ret += l;
+                } else {
+                    break;
+                }
+                ePontuando += 1;
+            }
+
+
+            i += 1;
+        }
+
+        return ret;
+
+    }
+
 }

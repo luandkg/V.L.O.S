@@ -6,6 +6,7 @@ import VLOS.Processo.Dependencia;
 import VLOS.Processo.Processo;
 import VLOS.Processo.ProcessoStatus;
 import VLOS.Processo.VLProcessos;
+import VLOS.Recurso.ControladorRecurso;
 import VLOS.Recurso.Recurso;
 import VLOS.Recurso.VLRecursos;
 
@@ -393,7 +394,7 @@ public class Dumper {
         System.out.println("\t-----------------------------------------------------");
         System.out.println("\t - RECURSOS ");
 
-        for (Recurso eRecurso : mVLRecursos.getRecursos()) {
+        for (ControladorRecurso eRecurso : mVLRecursos.getControladores()) {
 
             System.out.println("\t\t - RECURSO : " + eRecurso.getRID() + " ->> " + eRecurso.getStatus());
 

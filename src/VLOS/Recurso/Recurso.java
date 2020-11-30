@@ -25,15 +25,5 @@ public class Recurso {
         mControlador = eControlador;
     }
 
-    public boolean isBloqueado() {
-        return mControlador.isBloqueado();
-    }
 
-    public boolean isDisponivel() {
-        return mControlador.isDisponivel();
-    }
-
-    public String getStatus() {
-        return mControlador.getStatus();
-    }
 }

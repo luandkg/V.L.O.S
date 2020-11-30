@@ -285,7 +285,7 @@ public class VLMemoria {
             if (eReservar == eReservando) {
 
             } else {
-                 throw new IllegalArgumentException("Nao existem blocos disponiveis !");
+                throw new IllegalArgumentException("Nao existem blocos disponiveis !");
             }
 
         }
@@ -395,7 +395,7 @@ public class VLMemoria {
 
             Bloco eBloco = mBlocos.get(i);
 
-            if (eBloco.getStatus() == BlocoStatus.OCUPADO ) {
+            if (eBloco.getStatus() == BlocoStatus.OCUPADO) {
 
                 if (isOcupado) {
                     mContando += 1;
@@ -441,6 +441,58 @@ public class VLMemoria {
         return USUARIO_TAMANHO;
     }
 
+    public String getMemoriaStatus() {
+
+        long eTotal = this.getBlocos();
+        long eUsados = this.getBlocos_KernelReservados_Ocupado() + this.getBlocos_Usuarios_Ocupado();
+
+        double eTaxa = ((double) eUsados / (double) eTotal) * 100.0F;
+
+        //String eTaxador = getComQuantasCasas(String.valueOf(eTaxa), 2) + " % de " + eTotal + " blocos";
+        String eTaxador = getComQuantasCasas(String.valueOf(eTaxa), 2) + " % ";
+
+        return eTaxador;
+    }
+
+    public String getComQuantasCasas(String eValor, int eCasas) {
+
+        int i = 0;
+        int o = eValor.length();
+
+        String ret = "";
+
+        boolean mPontuado = false;
+        int ePontuando = 0;
+
+        while (i < o) {
+            String l = String.valueOf(eValor.charAt(i));
+
+            if (mPontuado == false) {
+                if (l.contentEquals(".")) {
+                    mPontuado = true;
+                    if (eCasas > 0) {
+                        ret += l;
+                    }
+                } else {
+                    ret += l;
+                }
+            } else {
+
+                if (ePontuando < eCasas) {
+                    ret += l;
+                } else {
+                    break;
+                }
+                ePontuando += 1;
+            }
+
+
+            i += 1;
+        }
+
+        return ret;
+
+    }
 
 
 }
